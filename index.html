@@ -1,0 +1,1503 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>To Do List Calendar</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap">
+<style>
+/* Layout: wall-calendar grid on the left, day/agenda panel on the right; weekday headers carry the Thai day colours (สีประจำวัน). */
+:root{
+  --bg:#EDF0F4;
+  --surface:#FFFFFF;
+  --surface-2:#F5F7FA;
+  --line:#D8DEE6;
+  --ink:#111B2A;
+  --ink-2:#4A5668;
+  --ink-3:#657286;
+  --accent:#2547D0;
+  --accent-ink:#FFFFFF;
+  --accent-soft:#E3E9FC;
+  --hi:#D13B30; --hi-soft:#FCE8E5; --hi-text:#B02A20;
+  --mid:#C7821A; --mid-soft:#FBF0DB; --mid-text:#835308;
+  --lo:#5F7FA3; --lo-soft:#E7EEF6; --lo-text:#3A5575;
+  --d0:#E0524A; --d1:#EBBF2D; --d2:#E877A9; --d3:#4DAA6D; --d4:#EC8B3C; --d5:#4B8DD8; --d6:#8E66CC;
+  --font-display:'Bai Jamjuree','IBM Plex Sans Thai','Noto Sans Thai',system-ui,sans-serif;
+  --font-body:'IBM Plex Sans Thai','Noto Sans Thai','Sarabun',system-ui,sans-serif;
+  --font-mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0D131B; --surface:#141C27; --surface-2:#1A2431; --line:#273445;
+    --ink:#E7ECF3; --ink-2:#AAB6C6; --ink-3:#8795A8;
+    --accent:#8CA2FF; --accent-ink:#0D131B; --accent-soft:#1D2A55;
+    --hi:#FF7C70; --hi-soft:#3B1F21; --hi-text:#FF9C92;
+    --mid:#F0B24A; --mid-soft:#392A10; --mid-text:#F4C777;
+    --lo:#86A9D3; --lo-soft:#1B2B3F; --lo-text:#A5C2E4;
+    --d0:#F0665D; --d1:#F0C94A; --d2:#F08DB8; --d3:#62BD84; --d4:#F29A53; --d5:#68A3E8; --d6:#A582DB;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0D131B; --surface:#141C27; --surface-2:#1A2431; --line:#273445;
+  --ink:#E7ECF3; --ink-2:#AAB6C6; --ink-3:#8795A8;
+  --accent:#8CA2FF; --accent-ink:#0D131B; --accent-soft:#1D2A55;
+  --hi:#FF7C70; --hi-soft:#3B1F21; --hi-text:#FF9C92;
+  --mid:#F0B24A; --mid-soft:#392A10; --mid-text:#F4C777;
+  --lo:#86A9D3; --lo-soft:#1B2B3F; --lo-text:#A5C2E4;
+  --d0:#F0665D; --d1:#F0C94A; --d2:#F08DB8; --d3:#62BD84; --d4:#F29A53; --d5:#68A3E8; --d6:#A582DB;
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:15px;line-height:1.5;-webkit-text-size-adjust:100%}
+h1,h2,h3,p,ul{margin:0;padding:0}
+ul{list-style:none}
+button{cursor:pointer}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+.app{
+  max-width:1180px;margin:0 auto;
+  padding-block:20px 40px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+}
+
+/* header */
+.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:14px 20px}
+.eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);font-weight:600}
+h1{font-family:var(--font-display);font-weight:700;font-size:clamp(30px,6vw,48px);line-height:1.25;display:flex;flex-wrap:wrap;align-items:baseline;gap:0 .3em}
+.yr{font-family:var(--font-mono);font-weight:400;font-size:.55em;color:var(--ink-3)}
+.ctrls{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.nav{display:flex;gap:6px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:2px}
+.seg button{border:0;background:none;padding:5px 12px;border-radius:6px;font-size:13.5px;color:var(--ink-2);min-height:30px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+
+.btn{font-weight:500;padding:7px 14px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);min-height:38px;transition:background .15s}
+.btn:hover{background:var(--surface-2)}
+.btn.icon{padding:0;width:38px;display:grid;place-items:center}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.primary:hover{background:var(--accent);filter:brightness(1.08)}
+.btn.danger{color:var(--hi-text)}
+.btn.danger.solid{background:var(--hi-soft);border-color:var(--hi)}
+.btn.small{min-height:32px;padding:4px 10px;font-size:13.5px}
+
+/* month summary */
+.summary{display:flex;flex-wrap:wrap;align-items:center;gap:6px 18px;margin:14px 0 16px;font-size:13.5px;color:var(--ink-2)}
+.summary b{font-family:var(--font-mono);font-weight:500;color:var(--ink);margin-right:5px}
+.summary .warn b{color:var(--hi-text)}
+.meter{flex:1 1 120px;max-width:260px;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.meter span{display:block;height:100%;background:var(--accent);border-radius:3px;transition:width .25s}
+
+/* main layout */
+.main{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:16px;align-items:start}
+@media (max-width:899px){.main{grid-template-columns:minmax(0,1fr)}}
+
+/* calendar */
+.cal{background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden;min-width:0}
+.wk,.days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}
+.wk{border-bottom:1px solid var(--line)}
+.wk span{padding:8px 4px 7px;text-align:center;font-size:13px;font-weight:600;color:var(--ink-2);border-top:3px solid var(--c)}
+.wk span:first-child{color:var(--hi-text)}
+.day{
+  appearance:none;display:flex;flex-direction:column;align-items:stretch;gap:4px;
+  min-width:0;min-height:112px;padding:6px;text-align:left;
+  background:var(--surface);border:0;border-top:1px solid var(--line);border-right:1px solid var(--line);border-radius:0;
+  transition:background .12s;
+}
+.day:nth-child(-n+7){border-top:0}
+.day:nth-child(7n){border-right:0}
+.day:hover{background:var(--surface-2)}
+.day.out{background:var(--surface-2)}
+.day.out .num{color:var(--ink-3)}
+.day.out .chips{opacity:.6}
+.day.sel{background:var(--accent-soft);box-shadow:inset 0 0 0 2px var(--accent)}
+.day:focus-visible{outline:2px solid var(--ink);outline-offset:-4px}
+.dh{display:flex;align-items:center;gap:6px;min-width:0}
+.num{display:inline-grid;place-items:center;flex:none;min-width:26px;height:26px;padding:0 4px;border-radius:13px;font-family:var(--font-mono);font-size:13px;font-weight:500}
+.day.sun .num,.day.hol .num{color:var(--hi-text)}
+.day.out.sun .num,.day.out.hol .num{color:var(--ink-3)}
+.day.today .num{background:var(--accent);color:var(--accent-ink)}
+.holn{min-width:0;font-size:10.5px;line-height:1.2;color:var(--hi-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chips{display:flex;flex-direction:column;gap:3px;min-width:0}
+.chip{display:flex;align-items:center;gap:5px;min-width:0;padding:2px 6px;border-radius:4px;background:var(--surface-2);font-size:12px;line-height:1.35}
+.day.sel .chip,.day:hover .chip{background:var(--surface)}
+.chip>span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chip i,.dots i,.lg i{flex:none;width:7px;height:7px;border-radius:50%;background:var(--p);display:inline-block}
+.chip.done i,.dots i.done{background:transparent;box-shadow:inset 0 0 0 1.5px var(--p)}
+.chip.done>span{text-decoration:line-through;color:var(--ink-3)}
+.more{padding-left:6px;font-size:11.5px;color:var(--ink-2)}
+.dots{display:none;gap:3px;flex-wrap:wrap;justify-content:center}
+.p-high{--p:var(--hi)}
+.p-mid{--p:var(--mid)}
+.p-low{--p:var(--lo)}
+
+/* panel */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;min-width:0;overflow:hidden}
+.tabs{display:flex;border-bottom:1px solid var(--line)}
+.tabs button{flex:1;padding:12px 8px;background:none;border:0;border-bottom:2px solid transparent;margin-bottom:-1px;font-weight:500;color:var(--ink-2)}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.add{display:flex;flex-direction:column;gap:8px;padding:12px;background:var(--surface-2);border-bottom:1px solid var(--line)}
+.add-row{display:flex;flex-wrap:wrap;gap:8px}
+.add-row .field{flex:1 1 104px;width:auto}
+.add-row .field.date{flex-basis:140px}
+.field{width:100%;min-width:0;min-height:38px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink)}
+textarea.field{resize:vertical;min-height:70px}
+.field:focus-visible{outline:2px solid var(--accent);outline-offset:0;border-color:var(--accent)}
+.pbody{padding:6px 12px 14px}
+
+.demo{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin:8px 0 4px;padding:8px 12px;border-radius:8px;background:var(--accent-soft);font-size:13.5px}
+.dhead{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:10px 0 6px}
+.dtitle{font-family:var(--font-display);font-size:19px;font-weight:600;line-height:1.35;text-wrap:balance}
+.holname{margin-top:2px;font-size:13px;color:var(--hi-text)}
+.count{flex:none;font-family:var(--font-mono);font-size:12.5px;color:var(--ink-2);padding-top:4px;white-space:nowrap}
+.gh{display:flex;align-items:center;gap:8px;margin:14px 0 2px;font-size:13px;font-weight:600;color:var(--ink-2)}
+.gh .n{font-family:var(--font-mono);font-weight:400;color:var(--ink-3)}
+.gh.late{color:var(--hi-text)}
+.gh-btn{background:none;border:0;padding:0;font-size:13px;font-weight:600;color:var(--ink);text-align:left}
+.gh-btn:hover{text-decoration:underline}
+.gh-note{margin-top:6px;font-size:12.5px;color:var(--ink-3)}
+
+.task{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:start;padding:8px 0;border-top:1px solid var(--line)}
+.task:first-child{border-top:0}
+.check{width:30px;height:30px;display:grid;place-items:center;background:none;border:0;padding:0;border-radius:8px}
+.box{width:20px;height:20px;display:grid;place-items:center;border:2px solid var(--p);border-radius:6px;color:var(--accent-ink);transition:background .12s}
+.box svg{opacity:0}
+.task.done .box{background:var(--p)}
+.task.done .box svg{opacity:1}
+.body{min-width:0;padding-top:3px}
+.body[data-act]{cursor:pointer}
+.t-title{font-weight:500;overflow-wrap:anywhere}
+.task.done .t-title{text-decoration:line-through;color:var(--ink-3);font-weight:400}
+.meta{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;margin-top:2px;font-size:12.5px;color:var(--ink-2)}
+.time{font-family:var(--font-mono);font-size:12.5px}
+.tag{display:inline-block;padding:0 8px;border-radius:999px;font-size:12px;line-height:20px;background:var(--surface-2);color:var(--ink-2)}
+.tag.high{background:var(--hi-soft);color:var(--hi-text)}
+.tag.mid{background:var(--mid-soft);color:var(--mid-text)}
+.tag.low{background:var(--lo-soft);color:var(--lo-text)}
+.tag.late{background:var(--hi-soft);color:var(--hi-text);box-shadow:inset 0 0 0 1px var(--hi)}
+.tag.ex{background:none;box-shadow:inset 0 0 0 1px var(--line);color:var(--ink-3)}
+.tag.now{background:var(--accent-soft);color:var(--ink)}
+.note{margin-top:3px;font-size:13px;color:var(--ink-2);white-space:pre-wrap;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.icon-btn{width:32px;height:32px;display:grid;place-items:center;border:0;background:none;border-radius:8px;color:var(--ink-3)}
+.icon-btn:hover{background:var(--surface-2);color:var(--ink)}
+.empty{padding:22px 4px 10px;color:var(--ink-2);font-size:14px}
+.empty b{display:block;color:var(--ink);font-weight:500;margin-bottom:2px}
+
+.task.editing{display:block;padding:12px;margin:8px 0;border:1px solid var(--line);border-radius:10px;background:var(--surface-2)}
+.task.editing:first-child{border-top:1px solid var(--line)}
+.f-row{display:flex;flex-direction:column;gap:3px;margin-bottom:10px}
+.f-row.three{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:8px}
+.f-row.three>div{display:flex;flex-direction:column;gap:3px;min-width:0}
+.f-row label,.f-row.three label{font-size:12.5px;color:var(--ink-2);font-weight:500}
+.f-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.grow{flex:1 1 0}
+.del-wrap{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:13px;color:var(--hi-text)}
+.del-confirm{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+
+/* work-hours settings */
+.ws{margin:0 0 16px;padding:14px;background:var(--surface);border:1px solid var(--line);border-radius:10px;display:flex;flex-wrap:wrap;align-items:flex-end;gap:14px 24px}
+.ws-times{display:flex;flex-wrap:wrap;gap:10px}
+.ws-times>div{display:flex;flex-direction:column;gap:3px}
+.ws label,.ws legend{font-size:12.5px;font-weight:500;color:var(--ink-2)}
+.ws .field{width:112px}
+.ws-days{border:0;padding:0;margin:0;min-width:0}
+.ws-daybtns{display:flex;gap:4px;margin-top:3px}
+.ws-daybtns button{width:38px;height:38px;border:1px solid var(--line);border-radius:8px;background:var(--surface);font-weight:500;color:var(--ink-2)}
+.ws-daybtns button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.ws-hol{display:flex;align-items:center;gap:8px;min-height:38px;font-size:13px;color:var(--ink-2)}
+.ws-hol input{width:18px;height:18px;accent-color:var(--accent)}
+.ws-sum{flex-basis:100%;font-size:13px;color:var(--ink-2)}
+.mini{flex:0 0 52px;align-self:center;font-size:12.5px;font-weight:500;color:var(--ink-2)}
+.hrs-prev{flex:1 1 auto;align-self:center;min-width:0;font-family:var(--font-mono);font-size:12.5px;color:var(--ink-2)}
+.f-row.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.f-row.two>div{display:flex;flex-direction:column;gap:3px;min-width:0}
+.f-row.two label,.f-row.two .lbl{font-size:12.5px;color:var(--ink-2);font-weight:500}
+.f-row output.hrs-prev{display:flex;align-items:center;min-height:38px;color:var(--ink)}
+.tag.hrs{background:var(--accent-soft);color:var(--ink);font-family:var(--font-mono);font-size:11.5px}
+.chip.cont{background:transparent;box-shadow:inset 0 0 0 1px var(--line)}
+.sheet td.hrs{padding:0 8px;font-family:var(--font-mono);font-size:12.5px;white-space:nowrap;color:var(--ink);background:var(--surface-2)}
+.sheet tfoot td{position:sticky;bottom:0;z-index:1;height:40px;padding:0 10px;background:var(--surface-2);border-top:1px solid var(--ink-3);border-bottom:0;font-size:13px;font-weight:600;color:var(--ink-2)}
+.sheet tfoot td.hrs{color:var(--ink)}
+
+/* sheet (Excel-style view) */
+.sheet-wrap{background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden;min-width:0}
+.sheet-wrap .demo{margin:0;border-radius:0}
+.sheet-scroll{overflow:auto;max-height:min(72vh,820px)}
+.sheet{width:100%;min-width:1460px;border-collapse:separate;border-spacing:0;table-layout:fixed;font-size:14px}
+.sheet th,.sheet td{padding:0;height:38px;background:var(--surface);border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.sheet th:last-child,.sheet td:last-child{border-right:0}
+.sheet thead th{position:sticky;top:0;z-index:2;background:var(--surface-2);font-size:13px;color:var(--ink-2);text-align:left;border-bottom:1px solid var(--ink-3)}
+.hbtn{display:flex;align-items:center;justify-content:space-between;gap:6px;width:100%;height:37px;padding:0 10px;background:none;border:0;color:inherit;font-weight:600;text-align:left}
+.hbtn:hover{background:var(--line)}
+.hbtn .arr{font-size:10px;color:var(--accent)}
+.sheet th.hn{text-align:center;font-family:var(--font-mono);font-weight:400;color:var(--ink-3)}
+.sheet td.rn{text-align:center;font-family:var(--font-mono);font-size:12px;color:var(--ink-3);background:var(--surface-2)}
+.sheet td.ck{text-align:center}
+.sheet input[type="checkbox"]{width:18px;height:18px;accent-color:var(--accent);vertical-align:middle;cursor:pointer}
+.cell{display:block;width:100%;min-width:0;height:37px;padding:0 10px;border:0;border-radius:0;background:transparent;color:var(--ink);font:inherit;text-overflow:ellipsis}
+.cell.mono{font-family:var(--font-mono);font-size:13px}
+.cell::placeholder{color:var(--ink-3);opacity:1}
+.cell:focus{outline:2px solid var(--accent);outline-offset:-2px;background:var(--surface)}
+.cell.late{color:var(--hi-text)}
+select.cell{cursor:pointer}
+.sheet tr.p-high select[data-f="pri"]{color:var(--hi-text)}
+.sheet tr.p-mid select[data-f="pri"]{color:var(--mid-text)}
+.sheet tr.p-low select[data-f="pri"]{color:var(--lo-text)}
+.sheet tr.s-doing select[data-f="status"]{color:var(--accent);font-weight:600}
+.sheet tr.s-blocked select[data-f="status"]{color:var(--hi-text);font-weight:600}
+.sheet tr.s-done select[data-f="status"]{color:var(--ink-3)}
+.tag.st-doing{background:var(--accent-soft);color:var(--ink)}
+.tag.st-blocked{background:var(--hi-soft);color:var(--hi-text)}
+.cell[data-f="date"],.cell[data-f="end"],.cell[data-f="time"],.cell[data-f="endTime"]{padding-right:28px;cursor:pointer;background-repeat:no-repeat;background-position:right 8px center;background-size:15px}
+.cell[data-f="date"],.cell[data-f="end"]{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%238795A8' stroke-width='1.4'%3E%3Crect x='2' y='3' width='12' height='11' rx='2'/%3E%3Cpath d='M2 7h12M5 1.5v3M11 1.5v3'/%3E%3C/svg%3E")}
+.cell[data-f="time"],.cell[data-f="endTime"]{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%238795A8' stroke-width='1.4'%3E%3Ccircle cx='8' cy='8' r='6'/%3E%3Cpath d='M8 4.5V8l2.5 1.5'/%3E%3C/svg%3E")}
+#pk{position:fixed;z-index:30;width:296px;padding:10px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:12px;box-shadow:0 8px 28px rgba(0,0,0,.22)}
+.pk-nav{display:flex;align-items:center;gap:2px;margin-bottom:6px}
+.pk-nav b{flex:1;text-align:center;font-size:14px;font-weight:600}
+.pk-nav button{width:32px;height:32px;border:0;border-radius:50%;background:none;font-size:18px;line-height:1;color:var(--ink-2)}
+.pk-nav button:hover{background:var(--surface-2)}
+.pk-wk,.pk-days{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}
+.pk-wk span{padding:4px 0;font-size:12px;color:var(--ink-3)}
+.pk-d{height:36px;border:0;border-radius:50%;background:none;font-family:var(--font-mono);font-size:13px}
+.pk-d:hover{background:var(--surface-2)}
+.pk-d.red{color:var(--hi-text)}
+.pk-d.tod{box-shadow:inset 0 0 0 1.5px var(--ink)}
+.pk-d.sel{background:var(--accent);color:var(--accent-ink);box-shadow:none}
+.pk-l{margin:8px 0 4px;font-size:12px;font-weight:600;color:var(--ink-2)}
+.pk-g{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
+.pk-t{height:34px;border:1px solid var(--line);border-radius:8px;background:var(--surface);font-family:var(--font-mono);font-size:13px}
+.pk-t:hover{background:var(--surface-2)}
+.pk-t.sel{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.pk-f{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px;margin-top:8px}
+.pk-f button{padding:5px 10px;border:0;border-radius:6px;background:none;font-weight:600;color:var(--accent)}
+.pk-f button:hover{background:var(--accent-soft)}
+.sheet tr.done .cell{color:var(--ink-3)}
+.sheet tr.done .cell[data-f="title"]{text-decoration:line-through}
+.sheet tbody tr:hover td:not(.rn){background:var(--surface-2)}
+.sheet .rx{text-align:center}
+.x{width:100%;height:37px;background:none;border:0;color:var(--ink-3);font-size:18px;line-height:1}
+.x:hover{color:var(--hi-text);background:var(--hi-soft)}
+.x.arm{font-size:12px;font-weight:600;color:var(--hi-text);background:var(--hi-soft)}
+.sheet tr.ex .x,.sheet tr.newrow .x{visibility:hidden}
+.sheet tr.newrow td{border-bottom:0}
+.sheet tr.newrow td.rn{color:var(--accent);font-size:15px}
+.sheet-hint{padding:9px 12px;border-top:1px solid var(--line);background:var(--surface-2);font-size:12.5px;color:var(--ink-2)}
+
+/* footer */
+.foot{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:14px;font-size:12.5px;color:var(--ink-2)}
+.legend{display:flex;flex-wrap:wrap;gap:4px 14px}
+.lg{display:inline-flex;align-items:center;gap:6px}
+.lg i.ring{background:transparent;box-shadow:inset 0 0 0 1.5px var(--ink-2)}
+.status::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;background:var(--st,var(--ink-3))}
+.status.ok{--st:var(--accent)}
+.status.warn{--st:var(--mid)}
+
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));max-width:calc(100% - 32px);padding:10px 16px;border-radius:8px;background:var(--ink);color:var(--bg);font-size:14px;z-index:20}
+
+@media (max-width:639px){
+  h1{font-size:34px}
+  .day{min-height:58px;padding:4px 2px;align-items:center;gap:3px}
+  .chips,.holn{display:none}
+  .dots{display:flex}
+  .num{min-width:24px;height:24px;font-size:12.5px}
+  .wk span{font-size:12px;padding-inline:0}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="app">
+  <header class="top">
+    <div>
+      <p class="eyebrow">To Do List Calendar</p>
+      <h1><span id="monthName"></span><span id="yearName" class="yr"></span></h1>
+    </div>
+    <div class="ctrls">
+      <div class="seg" role="group" aria-label="มุมมอง">
+        <button type="button" data-act="view" data-v="sheet" aria-pressed="true">ตาราง</button>
+        <button type="button" data-act="view" data-v="cal" aria-pressed="false">ปฏิทิน</button>
+      </div>
+      <div class="seg" role="group" aria-label="กรองตามสถานะ">
+        <button type="button" data-act="filter" data-v="all" aria-pressed="true">ทั้งหมด</button>
+        <button type="button" data-act="filter" data-v="open" aria-pressed="false">ค้างอยู่</button>
+        <button type="button" data-act="filter" data-v="done" aria-pressed="false">เสร็จแล้ว</button>
+      </div>
+      <button type="button" class="btn" data-act="ws" aria-expanded="false" aria-controls="wsPanel">เวลาทำงาน</button>
+      <div class="nav" id="nav">
+        <button type="button" class="btn icon" data-act="prev" aria-label="เดือนก่อนหน้า"><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button type="button" class="btn" data-act="today">วันนี้</button>
+        <button type="button" class="btn icon" data-act="next" aria-label="เดือนถัดไป"><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M7.5 4.5 13 10l-5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+    </div>
+  </header>
+
+  <div id="summary" class="summary" aria-label="สรุปงานของเดือน"></div>
+
+  <section class="ws" id="wsPanel" aria-label="ตั้งค่าเวลาทำงาน" hidden>
+    <div class="ws-times">
+      <div><label for="ws-ws">เริ่มงาน</label><input class="field" type="time" id="ws-ws"></div>
+      <div><label for="ws-we">เลิกงาน</label><input class="field" type="time" id="ws-we"></div>
+      <div><label for="ws-ls">เริ่มพักเที่ยง</label><input class="field" type="time" id="ws-ls"></div>
+      <div><label for="ws-le">สิ้นสุดพัก</label><input class="field" type="time" id="ws-le"></div>
+    </div>
+    <fieldset class="ws-days"><legend>วันทำงาน</legend>
+      <div class="ws-daybtns">
+        <button type="button" data-act="wsday" data-v="0" aria-pressed="false">อา</button>
+        <button type="button" data-act="wsday" data-v="1" aria-pressed="true">จ</button>
+        <button type="button" data-act="wsday" data-v="2" aria-pressed="true">อ</button>
+        <button type="button" data-act="wsday" data-v="3" aria-pressed="true">พ</button>
+        <button type="button" data-act="wsday" data-v="4" aria-pressed="true">พฤ</button>
+        <button type="button" data-act="wsday" data-v="5" aria-pressed="true">ศ</button>
+        <button type="button" data-act="wsday" data-v="6" aria-pressed="false">ส</button>
+      </div>
+    </fieldset>
+    <label class="ws-hol"><input type="checkbox" id="ws-hol"> ไม่นับวันหยุดนักขัตฤกษ์ (เฉพาะวันที่คงที่ ไม่รวมวันพระและวันหยุดชดเชย)</label>
+    <p class="ws-sum" id="wsSum"></p>
+  </section>
+
+  <div class="main" id="main">
+    <section class="cal" aria-label="ปฏิทิน">
+      <div class="wk" aria-hidden="true">
+        <span style="--c:var(--d0)">อา</span><span style="--c:var(--d1)">จ</span><span style="--c:var(--d2)">อ</span><span style="--c:var(--d3)">พ</span><span style="--c:var(--d4)">พฤ</span><span style="--c:var(--d5)">ศ</span><span style="--c:var(--d6)">ส</span>
+      </div>
+      <div class="days" id="grid" role="group" aria-label="วันในเดือน ใช้ปุ่มลูกศรเลื่อนวัน"></div>
+    </section>
+
+    <aside class="panel" id="panel">
+      <div class="tabs" role="tablist" aria-label="มุมมองรายการงาน">
+        <button type="button" role="tab" id="tab-day" data-act="tab" data-v="day" aria-selected="true">วันที่เลือก</button>
+        <button type="button" role="tab" id="tab-all" data-act="tab" data-v="all" aria-selected="false">ทุกงาน</button>
+      </div>
+      <form id="addForm" class="add" autocomplete="off">
+        <label class="sr" for="add-title">ชื่องานใหม่</label>
+        <input class="field" id="add-title" name="title" maxlength="200" placeholder="เพิ่มงานใหม่ แล้วกด Enter" required>
+        <div class="add-row">
+          <span class="mini">เริ่ม</span>
+          <label class="sr" for="add-date">วันเริ่ม</label>
+          <input class="field date" type="date" id="add-date" name="date">
+          <label class="sr" for="add-time">เวลาเริ่ม</label>
+          <input class="field" type="time" id="add-time" name="time">
+        </div>
+        <div class="add-row">
+          <span class="mini">สิ้นสุด</span>
+          <label class="sr" for="add-end">วันสิ้นสุด</label>
+          <input class="field date" type="date" id="add-end" name="end">
+          <label class="sr" for="add-endtime">เวลาสิ้นสุด</label>
+          <input class="field" type="time" id="add-endtime" name="endTime">
+        </div>
+        <div class="add-row">
+          <label class="sr" for="add-pri">ความสำคัญ</label>
+          <select class="field" id="add-pri" name="pri">
+            <option value="high">สำคัญสูง</option>
+            <option value="mid" selected>สำคัญกลาง</option>
+            <option value="low">สำคัญต่ำ</option>
+          </select>
+          <output class="hrs-prev" id="add-hrs" aria-live="polite"></output>
+          <button type="submit" class="btn primary">เพิ่ม</button>
+        </div>
+      </form>
+      <div class="pbody" id="panelBody" role="tabpanel"></div>
+    </aside>
+  </div>
+
+  <section class="sheet-wrap" id="sheet" aria-label="ตารางงาน" hidden>
+    <div class="demo" id="sheetDemo" hidden><span>ตัวอย่างงาน พิมพ์ในแถวล่างสุดเพื่อเพิ่มงานแรกของคุณ</span><button type="button" class="btn small" data-act="clear-ex">ล้างตัวอย่าง</button></div>
+    <div class="sheet-scroll">
+      <table class="sheet">
+        <colgroup><col style="width:46px"><col style="width:48px"><col><col style="width:132px"><col style="width:92px"><col style="width:132px"><col style="width:92px"><col style="width:92px"><col style="width:108px"><col style="width:100px"><col style="width:128px"><col style="width:22%"><col style="width:44px"></colgroup>
+        <thead>
+          <tr>
+            <th class="hn" scope="col">#</th>
+            <th scope="col"><button type="button" class="hbtn" data-act="sort" data-f="done" aria-label="เรียงตามสถานะเสร็จ">✓<span class="arr"></span></button></th>
+            <th scope="col"><button type="button" class="hbtn" data-act="sort" data-f="title">ชื่องาน<span class="arr"></span></button></th>
+            <th scope="col"><button type="button" class="hbtn" data-act="sort" data-f="date">วันเริ่ม<span class="arr"></span></button></th>
+            <th scope="col"><button type="button" class="hbtn" data-act="sort" data-f="time">เวลาเริ่ม<span class="arr"></span></button></th>
+            <th scope="col"><button type="button" class="hbtn" data-act="sort" data-f="end">วันสิ้นสุด<span class="arr"></span></button></th>
+            <th scope="col"><button type="button" class="hbtn" data-act="sort" data-f="endTime">เวลาสิ้นสุด<span class="arr"></span></button></th>
+            <th scope="col"><button type="button" class="hbtn" data-act="sort" data-f="rest">พัก (นาที)<span class="arr"></span></button></th>
+            <th scope="col"><button type="button" class="hbtn" data-act="sort" data-f="hours">ชม.ทำงาน<span class="arr"></span></button></th>
+            <th scope="col"><button type="button" class="hbtn" data-act="sort" data-f="pri">ความสำคัญ<span class="arr"></span></button></th>
+            <th scope="col"><button type="button" class="hbtn" data-act="sort" data-f="status">สถานะ<span class="arr"></span></button></th>
+            <th scope="col"><button type="button" class="hbtn" data-act="sort" data-f="note">หมายเหตุ / วิธีแก้ไข<span class="arr"></span></button></th>
+            <th scope="col"><span class="sr">ลบ</span></th>
+          </tr>
+        </thead>
+        <tbody id="sheetBody"></tbody>
+        <tfoot><tr><td class="rn"></td><td colspan="7">รวมชั่วโมงทำงานของแถวที่แสดง</td><td class="hrs" id="sheetTotal">—</td><td colspan="4"></td></tr></tfoot>
+      </table>
+    </div>
+    <p class="sheet-hint">คลิกช่องวันที่/เวลาเพื่อเลือก (หรือพิมพ์เองก็ได้ · Alt+↓ เปิดตัวเลือก) · Tab ไปช่องถัดไป · Enter หรือลูกศรขึ้นลงเลื่อนแถว · Esc ยกเลิกการแก้ · Ctrl+Delete ลบแถว · วางข้อมูลจาก Excel ได้ (เรียงคอลัมน์ ชื่องาน, วันเริ่ม, เวลาเริ่ม, วันสิ้นสุด, เวลาสิ้นสุด, พัก(นาที), ความสำคัญ, สถานะ, หมายเหตุ) · วันที่พิมพ์ได้ เช่น 5/11 หรือ 5/11/2569 · ชั่วโมงทำงานคำนวณจากเวลาทำงานที่ตั้งไว้ (ปุ่ม "เวลาทำงาน" ด้านบน)</p>
+  </section>
+
+  <footer class="foot">
+    <div class="legend" aria-label="สัญลักษณ์">
+      <span class="lg"><i class="p-high"></i>สำคัญสูง</span>
+      <span class="lg"><i class="p-mid"></i>กลาง</span>
+      <span class="lg"><i class="p-low"></i>ต่ำ</span>
+      <span class="lg"><i class="p-mid ring" style="background:transparent;box-shadow:inset 0 0 0 1.5px var(--ink-2)"></i>เสร็จแล้ว</span>
+    </div>
+    <span class="status" id="status"></span>
+    <span>วันที่แดงคือวันอาทิตย์และวันหยุดที่มีวันที่คงที่ (ไม่รวมวันพระและวันหยุดชดเชย)</span>
+  </footer>
+</div>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+<script>
+(function(){
+'use strict';
+
+/* ---------- constants ---------- */
+const TH_MONTHS=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+const TH_MON_SHORT=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+const TH_DAYS=['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'];
+const TH_DAY_SHORT=['อา','จ','อ','พ','พฤ','ศ','ส'];
+const HOLIDAYS={
+  '01-01':'วันขึ้นปีใหม่','04-06':'วันจักรี','04-13':'วันสงกรานต์','04-14':'วันสงกรานต์','04-15':'วันสงกรานต์',
+  '05-01':'วันแรงงานแห่งชาติ','05-04':'วันฉัตรมงคล','06-03':'วันเฉลิมพระชนมพรรษาสมเด็จพระราชินี',
+  '07-28':'วันเฉลิมพระชนมพรรษา ร.10','08-12':'วันแม่แห่งชาติ','10-13':'วันนวมินทรมหาราช','10-23':'วันปิยมหาราช',
+  '12-05':'วันพ่อแห่งชาติ','12-10':'วันรัฐธรรมนูญ','12-31':'วันสิ้นปี'
+};
+const PRI=['high','mid','low'];
+const PRI_LABEL={high:'สำคัญสูง',mid:'สำคัญกลาง',low:'สำคัญต่ำ'};
+const ST=['todo','doing','blocked','done'];
+const ST_LABEL={todo:'ยังไม่เริ่ม',doing:'กำลังทำ',blocked:'ติดปัญหา',done:'เสร็จแล้ว'};
+const stOpts=v=>ST.map(k=>'<option value="'+k+'"'+(k===v?' selected':'')+'>'+ST_LABEL[k]+'</option>').join('');
+const KEY_CACHE='todocal.v1.cache', KEY_LOCAL='todocal.v1.local', KEY_NOEX='todocal.v1.noexamples', KEY_SET='todocal.v1.settings';
+const RE_D=/^\d{4}-\d{2}-\d{2}$/, RE_T=/^\d{2}:\d{2}$/;
+const SVG_CHECK='<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="m3.5 8.5 3 3 6-7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const SVG_PENCIL='<svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path d="m13.5 3.5 3 3L7 16H4v-3z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>';
+
+/* ---------- helpers ---------- */
+const $=(s,r)=>(r||document).querySelector(s);
+const pad=n=>String(n).padStart(2,'0');
+const ymd=(y,m,d)=>y+'-'+pad(m+1)+'-'+pad(d);
+const fromDate=dt=>ymd(dt.getFullYear(),dt.getMonth(),dt.getDate());
+const parse=s=>{const p=s.split('-').map(Number);return new Date(p[0],p[1]-1,p[2]);};
+const todayStr=()=>fromDate(new Date());
+const holiday=s=>HOLIDAYS[s.slice(5)]||'';
+const esc=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function fmtShort(s){
+  const d=parse(s);
+  let t=TH_DAY_SHORT[d.getDay()]+'. '+d.getDate()+' '+TH_MON_SHORT[d.getMonth()];
+  if(d.getFullYear()!==new Date().getFullYear()) t+=' '+(d.getFullYear()+543);
+  return t;
+}
+const lsGet=k=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):null;}catch(e){return null;}};
+const lsSet=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}};
+function norm(id,d){
+  d=d||{};
+  const st=ST.indexOf(d.status)>=0?d.status:(d.done?'done':'todo');
+  return {
+    id:id,
+    title:String(d.title||'').slice(0,200),
+    date:RE_D.test(d.date||'')?d.date:'',
+    time:RE_T.test(d.time||'')?d.time:'',
+    end:RE_D.test(d.end||'')?d.end:'',
+    endTime:RE_T.test(d.endTime||'')?d.endTime:'',
+    pri:PRI.indexOf(d.pri)>=0?d.pri:'mid',
+    note:String(d.note||'').slice(0,1000),
+    status:st,
+    done:st==='done',
+    rest:Math.min(9999,Math.max(0,parseInt(d.rest,10)||0)),
+    created:Number(d.created)||0
+  };
+}
+function newId(){return 't'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+function cmp(a,b){
+  if(a.done!==b.done) return a.done?1:-1;
+  if(a.time!==b.time){ if(!a.time) return -1; if(!b.time) return 1; return a.time<b.time?-1:1; }
+  const r=PRI.indexOf(a.pri)-PRI.indexOf(b.pri);
+  if(r) return r;
+  return a.created-b.created;
+}
+
+/* ---------- state ---------- */
+let today=todayStr();
+let sel=today;
+let view={y:parseInt(today.slice(0,4),10),m:parseInt(today.slice(5,7),10)-1};
+let filter='all', tab='day', editing=null;
+const KEY_VIEW='todocal.v1.view';
+let viewMode=lsGet(KEY_VIEW)==='cal'?'cal':'sheet';
+let sheetSort=null;
+
+/* ---------- work-hours settings & calculation ---------- */
+const DEFAULT_S={ws:'09:00',we:'18:00',ls:'12:00',le:'13:00',days:[1,2,3,4,5],hol:false};
+let S={ws:DEFAULT_S.ws,we:DEFAULT_S.we,ls:DEFAULT_S.ls,le:DEFAULT_S.le,days:DEFAULT_S.days.slice(),hol:false};
+const toMin=s=>{const p=s.split(':');return (+p[0])*60+(+p[1]);};
+const addDay=s=>{const d=parse(s);d.setDate(d.getDate()+1);return fromDate(d);};
+function settingsError(n){
+  if(!RE_T.test(n.ws)||!RE_T.test(n.we)||toMin(n.we)<=toMin(n.ws)) return 'เวลาเลิกงานต้องอยู่หลังเวลาเริ่มงาน';
+  if(n.ls||n.le){
+    if(!RE_T.test(n.ls)||!RE_T.test(n.le)||toMin(n.le)<=toMin(n.ls)||toMin(n.ls)<toMin(n.ws)||toMin(n.le)>toMin(n.we))
+      return 'ช่วงพักต้องอยู่ในเวลาทำงาน และสิ้นสุดหลังเริ่มพัก (เว้นว่างทั้งสองช่องถ้าไม่มีพัก)';
+    if(toMin(n.ls)<=toMin(n.ws)&&toMin(n.le)>=toMin(n.we)) return 'ช่วงพักครอบคลุมเวลาทำงานทั้งหมดไม่ได้';
+  }
+  if(!n.days.length) return 'เลือกวันทำงานอย่างน้อย 1 วัน';
+  return '';
+}
+function normSettings(d){
+  d=d||{};
+  const okT=v=>typeof v==='string'&&RE_T.test(v);
+  const okL=v=>typeof v==='string'&&(v===''||RE_T.test(v));
+  const n={
+    ws:okT(d.ws)?d.ws:DEFAULT_S.ws, we:okT(d.we)?d.we:DEFAULT_S.we,
+    ls:okL(d.ls)?d.ls:DEFAULT_S.ls, le:okL(d.le)?d.le:DEFAULT_S.le,
+    days:Array.isArray(d.days)?d.days.filter(x=>Number.isInteger(x)&&x>=0&&x<=6):DEFAULT_S.days.slice(),
+    hol:!!d.hol
+  };
+  if(settingsError(n)) return {ws:DEFAULT_S.ws,we:DEFAULT_S.we,ls:DEFAULT_S.ls,le:DEFAULT_S.le,days:DEFAULT_S.days.slice(),hol:false};
+  return n;
+}
+function segments(){
+  const ws=toMin(S.ws), we=toMin(S.we);
+  if(S.ls&&S.le){
+    const ls=toMin(S.ls), le=toMin(S.le);
+    if(le>ls&&ls>=ws&&le<=we) return [[ws,ls],[le,we]].filter(g=>g[1]>g[0]);
+  }
+  return [[ws,we]];
+}
+function dayMin(){ return segments().reduce((a,g)=>a+g[1]-g[0],0); }
+function rangeError(t){
+  if(!t.date) return (t.end||t.endTime)?'ใส่วันเริ่มก่อนกำหนดวันสิ้นสุด':'';
+  const e=t.end||t.date;
+  if(e<t.date) return 'วันสิ้นสุดต้องไม่ก่อนวันเริ่ม';
+  if(e===t.date&&t.time&&t.endTime&&t.endTime<t.time) return 'เวลาสิ้นสุดต้องไม่ก่อนเวลาเริ่ม';
+  return '';
+}
+const hasRange=t=>!!(t.date&&(t.end||t.endTime));
+const endOf=t=>t.end||t.date;
+const isLate=t=>!t.done&&!!endOf(t)&&endOf(t)<today;
+/* working minutes between start and end, inside the configured work window */
+function workMinutes(t){
+  if(!hasRange(t)||rangeError(t)) return null;
+  const e=t.end||t.date;
+  const st=t.time?toMin(t.time):toMin(S.ws), et=t.endTime?toMin(t.endTime):toMin(S.we);
+  const segs=segments();
+  let total=0, d=t.date, n=0;
+  while(d<=e&&n<800){
+    const dow=parse(d).getDay();
+    if(S.days.indexOf(dow)>=0&&!(S.hol&&holiday(d))){
+      const a=d===t.date?st:0, b=d===e?et:1440;
+      for(let i=0;i<segs.length;i++){
+        const lo=Math.max(a,segs[i][0]), hi=Math.min(b,segs[i][1]);
+        if(hi>lo) total+=hi-lo;
+      }
+    }
+    d=addDay(d); n++;
+  }
+  return Math.max(0,total-(parseInt(t.rest,10)||0));
+}
+function fmtDur(min){
+  const h=Math.floor(min/60), m=Math.round(min%60);
+  if(!h&&!m) return '0 ชม.';
+  return (h?h+' ชม.':'')+(h&&m?' ':'')+(m?m+' น.':'');
+}
+function rangeText(t){
+  const a=fmtShort(t.date)+(t.time?' '+t.time:'');
+  const e=t.end||t.date;
+  const b=(e!==t.date?fmtShort(e):'')+(t.endTime?(e!==t.date?' ':'')+t.endTime:'');
+  return b?a+' → '+b:a;
+}
+function addPreview(t){
+  const re=rangeError(t); if(re) return re;
+  const m=workMinutes(t);
+  return m===null?'':'ชั่วโมงทำงาน '+fmtDur(m);
+}
+function editPreview(t){
+  const re=rangeError(t); if(re) return re;
+  const m=workMinutes(t);
+  return m===null?'—':fmtDur(m);
+}
+/* ---------- work-hours UI ---------- */
+function saveSettings(){
+  lsSet(KEY_SET,S);
+  if(mode==='cloud'&&coll) enqueue('_settings',()=>coll.doc('_settings').set(S)).catch(fail);
+  renderAll();
+}
+function renderSettings(force){
+  const set=(id,v)=>{ const el=$(id); if(force||document.activeElement!==el) el.value=v; };
+  set('#ws-ws',S.ws); set('#ws-we',S.we); set('#ws-ls',S.ls); set('#ws-le',S.le);
+  $('#ws-hol').checked=!!S.hol;
+  document.querySelectorAll('[data-act="wsday"]').forEach(b=>b.setAttribute('aria-pressed',String(S.days.indexOf(+b.dataset.v)>=0)));
+  const span=toMin(S.we)-toMin(S.ws), brk=span-dayMin();
+  $('#wsSum').textContent='เวลางานวันละ '+fmtDur(span)+(brk>0?' · พัก '+fmtDur(brk)+' · ชั่วโมงทำงานสุทธิ '+fmtDur(dayMin()):'')+' (เวลาในช่อง "พัก (นาที)" ของแต่ละงานจะถูกหักเพิ่ม)';
+}
+function updateAddPreview(){
+  $('#add-hrs').textContent=addPreview({date:$('#add-date').value,time:$('#add-time').value,end:$('#add-end').value,endTime:$('#add-endtime').value});
+}
+function updateEditPreview(){
+  const f=$('#editForm'), o=$('#ed-hrs'); if(!f||!o) return;
+  o.textContent=editPreview({date:f.elements.date.value,time:f.elements.time.value,end:f.elements.end.value,endTime:f.elements.endTime.value,rest:f.elements.rest.value});
+}
+$('#wsPanel').addEventListener('change',()=>{
+  const n={ws:$('#ws-ws').value,we:$('#ws-we').value,ls:$('#ws-ls').value,le:$('#ws-le').value,days:S.days.slice(),hol:$('#ws-hol').checked};
+  const err=settingsError(n);
+  if(err){ toast(err); renderSettings(true); return; }
+  S=n; saveSettings();
+});
+$('#addForm').addEventListener('input',updateAddPreview);
+$('#panel').addEventListener('input',e=>{ if(e.target.closest&&e.target.closest('#editForm')) updateEditPreview(); });
+let tasks=[], examples=[], showExamples=false;
+let mode='boot';          // boot | cloud | local
+let status='connecting';  // connecting | cloud | local | slow | revoked
+let coll=null;
+let readyRes; const ready=new Promise(r=>{readyRes=r;});
+const chains=new Map();
+
+const src=()=>showExamples?examples:tasks;
+const find=id=>src().find(t=>t.id===id);
+const pass=t=>filter==='all'||(filter==='open'?!t.done:t.done);
+
+function makeExamples(){
+  const n=new Date();
+  const off=k=>fromDate(new Date(n.getFullYear(),n.getMonth(),n.getDate()+k));
+  const mk=(i,title,k,time,pri,done,note)=>({id:'ex'+i,title:title,date:k===null?'':off(k),time:time||'',end:'',endTime:'',pri:pri,note:note||'',done:!!done,status:done?'done':'todo',rest:0,created:i,example:true});
+  return [
+    mk(1,'สรุปงานที่ต้องส่งสัปดาห์หน้า',0,'09:30','high',false,'รวบรวมจากบันทึกการประชุม'),
+    mk(2,'ซื้อของเข้าบ้าน',0,'17:00','low'),
+    mk(3,'ประชุมทีมประจำสัปดาห์',1,'10:00','mid'),
+    mk(4,'ส่งรายงานความคืบหน้า',2,'','high'),
+    mk(5,'นัดทำฟัน',4,'14:00','mid'),
+    mk(6,'จ่ายค่าอินเทอร์เน็ต',-2,'','high'),
+    mk(7,'อัปเดตเอกสารโปรเจกต์',-1,'11:00','mid',true),
+    mk(8,'อ่านหนังสือที่ค้างไว้',null,'','low'),
+    Object.assign(mk(9,'ร่างเอกสารข้อกำหนดระบบ',1,'09:00','high',false,'กำหนดวันและเวลาเริ่ม-สิ้นสุด ระบบจะนับเฉพาะชั่วโมงทำงาน'),{end:off(3),endTime:'17:00'})
+  ];
+}
+
+/* ---------- toast ---------- */
+let tt;
+function toast(msg){
+  const el=$('#toast'); el.textContent=msg; el.hidden=false;
+  clearTimeout(tt); tt=setTimeout(()=>{el.hidden=true;},3200);
+}
+const fail=e=>toast(e&&e.code==='quota_exceeded'?'พื้นที่เก็บข้อมูลเต็ม ลบงานเก่าก่อนแล้วลองใหม่':'บันทึกไม่สำเร็จ ลองอีกครั้ง');
+
+/* ---------- persistence ---------- */
+function enqueue(id,fn){
+  const prev=chains.get(id)||Promise.resolve();
+  const next=prev.catch(()=>{}).then(fn);
+  chains.set(id,next);
+  return next;
+}
+async function save(t){
+  await ready;
+  if(mode==='cloud'&&coll){
+    const body={title:t.title,date:t.date,time:t.time,end:t.end||'',endTime:t.endTime||'',pri:t.pri,note:t.note,done:t.done,status:t.status,rest:t.rest||0,created:t.created};
+    await enqueue(t.id,()=>coll.doc(t.id).set(body));
+  }else{
+    const i=tasks.findIndex(x=>x.id===t.id);
+    const clean=norm(t.id,t);
+    if(i<0) tasks.push(clean); else tasks[i]=clean;
+    lsSet(KEY_LOCAL,tasks);
+    renderAll();
+  }
+}
+async function remove(id){
+  await ready;
+  if(mode==='cloud'&&coll){
+    await enqueue(id,()=>coll.doc(id).delete());
+  }else{
+    tasks=tasks.filter(x=>x.id!==id);
+    lsSet(KEY_LOCAL,tasks);
+    renderAll();
+  }
+}
+function dismissExamples(){
+  if(!showExamples) return;
+  showExamples=false; lsSet(KEY_NOEX,1);
+}
+
+/* ---------- rendering ---------- */
+function renderAll(){
+  today=todayStr();
+  renderTop();
+  if(viewMode==='cal'){ renderGrid(); renderPanel(); }
+  renderSheet();
+  renderSettings();
+  updateAddPreview();
+  renderStatus();
+}
+
+function renderTop(){
+  const y=view.y, m=view.m;
+  if(viewMode==='sheet'){ $('#monthName').textContent='ตารางงาน'; $('#yearName').textContent=''; }
+  else{ $('#monthName').textContent=TH_MONTHS[m]; $('#yearName').textContent=String(y+543); }
+  const prefix=y+'-'+pad(m+1);
+  const all=src();
+  const inMonth=viewMode==='sheet'?all:all.filter(t=>t.date&&t.date.slice(0,7)===prefix);
+  const done=inMonth.filter(t=>t.done).length;
+  const overdue=all.filter(isLate).length;
+  const undated=all.filter(t=>!t.done&&!t.date).length;
+  const pct=inMonth.length?Math.round(done*100/inMonth.length):0;
+  const totalMin=inMonth.reduce((a,t)=>a+(workMinutes(t)||0),0);
+  $('#summary').innerHTML=
+    '<span><b>'+inMonth.length+'</b>'+(viewMode==='sheet'?'งานทั้งหมด':'งานเดือนนี้')+'</span>'+
+    '<span><b>'+done+'</b>เสร็จแล้ว</span>'+
+    (totalMin?'<span><b>'+fmtDur(totalMin)+'</b>ชั่วโมงทำงานรวม</span>':'')+
+    '<span class="'+(overdue?'warn':'')+'"><b>'+overdue+'</b>เลยกำหนด</span>'+
+    '<span><b>'+undated+'</b>ไม่กำหนดวัน</span>'+
+    '<span class="meter" role="img" aria-label="เสร็จ '+done+' จาก '+inMonth.length+' งาน"><span style="width:'+pct+'%"></span></span>';
+  document.querySelectorAll('[data-act="filter"]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===filter)));
+  document.querySelectorAll('[data-act="view"]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===viewMode)));
+}
+
+function renderGrid(){
+  const y=view.y, m=view.m;
+  const lead=new Date(y,m,1).getDay();
+  const dim=new Date(y,m+1,0).getDate();
+  const rows=Math.ceil((lead+dim)/7);
+  const by={};
+  src().filter(pass).forEach(t=>{
+    if(!t.date) return;
+    const e=t.end&&t.end>t.date?t.end:t.date;
+    let d=t.date, n=0;
+    while(d<=e&&n<62){ (by[d]=by[d]||[]).push(t); d=addDay(d); n++; }
+  });
+  const inView=sel.slice(0,7)===y+'-'+pad(m+1);
+  const focusS=inView?sel:ymd(y,m,1);
+  let h='';
+  for(let i=0;i<rows*7;i++){
+    const dt=new Date(y,m,1-lead+i);
+    const s=fromDate(dt), dow=dt.getDay(), out=dt.getMonth()!==m;
+    const hol=holiday(s);
+    const L=(by[s]||[]).slice().sort(cmp);
+    const cls=['day'];
+    if(out)cls.push('out'); if(s===today)cls.push('today'); if(s===sel)cls.push('sel'); if(dow===0)cls.push('sun'); if(hol)cls.push('hol');
+    const open=L.filter(t=>!t.done).length;
+    const label=dt.getDate()+' '+TH_MONTHS[dt.getMonth()]+' '+(dt.getFullYear()+543)+(hol?' '+hol:'')+(L.length?' มี '+L.length+' งาน เหลือ '+open:' ไม่มีงาน');
+    let chips=L.slice(0,3).map(t=>'<span class="chip p-'+t.pri+(t.done?' done':'')+(t.date!==s?' cont':'')+'"><i></i><span>'+esc(t.title)+'</span></span>').join('');
+    if(L.length>3) chips+='<span class="more">+'+(L.length-3)+' งาน</span>';
+    const dots=L.slice(0,4).map(t=>'<i class="p-'+t.pri+(t.done?' done':'')+'"></i>').join('');
+    h+='<button type="button" class="'+cls.join(' ')+'" data-act="day" data-date="'+s+'" tabindex="'+(s===focusS?0:-1)+'" aria-pressed="'+(s===sel)+'" aria-label="'+esc(label)+'">'+
+       '<span class="dh"><span class="num">'+dt.getDate()+'</span>'+(hol?'<span class="holn">'+esc(hol)+'</span>':'')+'</span>'+
+       '<span class="chips">'+chips+'</span><span class="dots">'+dots+'</span></button>';
+  }
+  $('#grid').innerHTML=h;
+}
+
+function taskItem(t,showDate){
+  if(editing===t.id) return editForm(t);
+  const late=isLate(t);
+  const meta=[];
+  if(hasRange(t)) meta.push('<span class="time">'+rangeText(t)+'</span>');
+  else{
+    if(showDate) meta.push('<span>'+(t.date?fmtShort(t.date):'ไม่กำหนดวัน')+'</span>');
+    if(t.time) meta.push('<span class="time">'+t.time+'</span>');
+  }
+  meta.push('<span class="tag '+t.pri+'">'+PRI_LABEL[t.pri]+'</span>');
+  if(t.status==='doing'||t.status==='blocked') meta.push('<span class="tag st-'+t.status+'">'+ST_LABEL[t.status]+'</span>');
+  const wm=workMinutes(t);
+  if(wm!==null) meta.push('<span class="tag hrs" title="ชั่วโมงทำงานตามเวลาทำงานที่ตั้งไว้">ทำงาน '+fmtDur(wm)+'</span>');
+  if(late) meta.push('<span class="tag late">เลยกำหนด</span>');
+  if(t.example) meta.push('<span class="tag ex">ตัวอย่าง</span>');
+  return '<li class="task p-'+t.pri+(t.done?' done':'')+'" data-id="'+esc(t.id)+'">'+
+    '<button type="button" class="check" role="checkbox" aria-checked="'+t.done+'" data-act="toggle" aria-label="'+esc(t.title)+'"><span class="box">'+SVG_CHECK+'</span></button>'+
+    '<div class="body"'+(t.example?'':' data-act="edit"')+'>'+
+      '<div class="t-title">'+esc(t.title)+'</div>'+
+      '<div class="meta">'+meta.join('')+'</div>'+
+      (t.note?'<div class="note">'+esc(t.note)+'</div>':'')+
+    '</div>'+
+    (t.example?'<span></span>':'<button type="button" class="icon-btn" data-act="edit" aria-label="แก้ไข '+esc(t.title)+'">'+SVG_PENCIL+'</button>')+
+  '</li>';
+}
+
+function editForm(t){
+  const opt=(v)=>'<option value="'+v+'"'+(t.pri===v?' selected':'')+'>'+PRI_LABEL[v]+'</option>';
+  return '<li class="task editing" data-id="'+esc(t.id)+'"><form id="editForm" autocomplete="off">'+
+    '<div class="f-row"><label for="ed-title">ชื่องาน</label><input class="field" id="ed-title" name="title" maxlength="200" required value="'+esc(t.title)+'"></div>'+
+    '<div class="f-row two">'+
+      '<div><label for="ed-date">วันเริ่ม</label><input class="field" type="date" id="ed-date" name="date" value="'+t.date+'"></div>'+
+      '<div><label for="ed-time">เวลาเริ่ม</label><input class="field" type="time" id="ed-time" name="time" value="'+t.time+'"></div>'+
+    '</div>'+
+    '<div class="f-row two">'+
+      '<div><label for="ed-end">วันสิ้นสุด</label><input class="field" type="date" id="ed-end" name="end" value="'+t.end+'"></div>'+
+      '<div><label for="ed-endtime">เวลาสิ้นสุด</label><input class="field" type="time" id="ed-endtime" name="endTime" value="'+t.endTime+'"></div>'+
+    '</div>'+
+    '<div class="f-row two">'+
+      '<div><label for="ed-pri">ความสำคัญ</label><select class="field" id="ed-pri" name="pri">'+opt('high')+opt('mid')+opt('low')+'</select></div>'+
+      '<div><span class="lbl">ชั่วโมงทำงาน</span><output class="hrs-prev" id="ed-hrs">'+esc(editPreview(t))+'</output></div>'+
+    '</div>'+
+    '<div class="f-row two">'+
+      '<div><label for="ed-status">สถานะ</label><select class="field" id="ed-status" name="status">'+stOpts(t.status)+'</select></div>'+
+      '<div><label for="ed-rest">พักระหว่างทำ (นาที)</label><input class="field" type="number" id="ed-rest" name="rest" min="0" max="9999" step="5" inputmode="numeric" placeholder="0" value="'+(t.rest||'')+'"></div>'+
+    '</div>'+
+    '<div class="f-row"><label for="ed-note">หมายเหตุ / วิธีแก้ไข</label><textarea class="field" id="ed-note" name="note" rows="3" maxlength="1000">'+esc(t.note)+'</textarea></div>'+
+    '<div class="f-actions">'+
+      '<button type="submit" class="btn primary">บันทึก</button>'+
+      '<button type="button" class="btn" data-act="cancel">ยกเลิก</button>'+
+      '<span class="grow"></span>'+
+      '<span class="del-wrap"><button type="button" class="btn danger" data-act="del">ลบงาน</button>'+
+      '<span class="del-confirm" hidden>ลบแล้วกู้คืนไม่ได้ <button type="button" class="btn danger solid" data-act="del-yes">ลบเลย</button><button type="button" class="btn" data-act="del-no">เก็บไว้</button></span></span>'+
+    '</div></form></li>';
+}
+
+function dayView(){
+  const dt=parse(sel), hol=holiday(sel);
+  const all=src().filter(t=>t.date&&t.date<=sel&&(t.end||t.date)>=sel);
+  const items=all.filter(pass).sort(cmp);
+  const done=all.filter(t=>t.done).length;
+  let h='<div class="dhead"><div><h2 class="dtitle">วัน'+TH_DAYS[dt.getDay()]+'ที่ '+dt.getDate()+' '+TH_MONTHS[dt.getMonth()]+' '+(dt.getFullYear()+543)+'</h2>'+
+        (sel===today?'<span class="tag now">วันนี้</span>':'')+
+        (hol?'<p class="holname">'+esc(hol)+'</p>':'')+'</div>'+
+        (all.length?'<span class="count">เสร็จ '+done+'/'+all.length+'</span>':'')+'</div>';
+  if(items.length){
+    h+='<ul class="tasks">'+items.map(t=>taskItem(t,false)).join('')+'</ul>';
+  }else if(all.length){
+    h+='<div class="empty"><b>ไม่มีงานที่ตรงกับตัวกรอง</b>เปลี่ยนตัวกรองด้านบนเพื่อดูงานอื่นของวันนี้</div>';
+  }else{
+    h+='<div class="empty"><b>ยังไม่มีงานในวันนี้</b>พิมพ์ชื่องานในช่องด้านบน แล้วกด Enter เพื่อเพิ่ม</div>';
+  }
+  return h;
+}
+
+function group(title,cls,list,showDate){
+  if(!list.length) return '';
+  return '<section><h3 class="gh '+cls+'">'+title+' <span class="n">'+list.length+'</span></h3><ul class="tasks">'+list.map(t=>taskItem(t,showDate)).join('')+'</ul></section>';
+}
+function allView(){
+  const L=src().filter(pass);
+  const byDate=(a,b)=>a.date===b.date?cmp(a,b):(a.date<b.date?-1:1);
+  const late=L.filter(isLate).sort(byDate);
+  const next=L.filter(t=>!t.done&&t.date&&!isLate(t)).sort(byDate);
+  const undated=L.filter(t=>!t.done&&!t.date).sort(cmp);
+  const done=L.filter(t=>t.done).sort((a,b)=>(b.date||'').localeCompare(a.date||'')||cmp(a,b));
+  let h='';
+  h+=group('เลยกำหนด','late',late,true);
+  if(next.length){
+    const days={}, order=[];
+    next.forEach(t=>{ const k=t.date<today?today:t.date; if(!days[k]){days[k]=[];order.push(k);} days[k].push(t); });
+    order.forEach(d=>{
+      h+='<section><h3 class="gh"><button type="button" class="gh-btn" data-act="day" data-date="'+d+'">'+(d===today?'วันนี้ · ':'')+fmtShort(d)+'</button> <span class="n">'+days[d].length+'</span></h3><ul class="tasks">'+days[d].map(t=>taskItem(t,false)).join('')+'</ul></section>';
+    });
+  }
+  h+=group('ไม่กำหนดวัน','',undated,false);
+  if(done.length){
+    h+=group('เสร็จแล้ว','',done.slice(0,15),true);
+    if(done.length>15) h+='<p class="gh-note">แสดง 15 รายการล่าสุดจากทั้งหมด '+done.length+' งาน</p>';
+  }
+  if(!h) h='<div class="empty"><b>ไม่มีงานในรายการ</b>เพิ่มงานแรกได้จากช่องด้านบน</div>';
+  return h;
+}
+
+function renderPanel(fresh){
+  $('#tab-day').setAttribute('aria-selected',String(tab==='day'));
+  $('#tab-all').setAttribute('aria-selected',String(tab==='all'));
+  let keep=null, focusId=null;
+  const f=$('#editForm');
+  if(f&&!fresh){
+    keep={};
+    ['title','date','time','end','endTime','pri','status','rest','note'].forEach(k=>{keep[k]=f.elements[k].value;});
+    const ae=document.activeElement;
+    focusId=(ae&&f.contains(ae))?ae.id:null;
+  }
+  if(editing&&!find(editing)) editing=null;
+  const banner=showExamples?'<div class="demo"><span>ตัวอย่างงาน เพิ่มงานแรกของคุณเพื่อเริ่มใช้จริง</span><button type="button" class="btn small" data-act="clear-ex">ล้างตัวอย่าง</button></div>':'';
+  $('#panelBody').innerHTML=banner+(tab==='day'?dayView():allView());
+  const nf=$('#editForm');
+  if(nf){
+    if(keep) Object.keys(keep).forEach(k=>{nf.elements[k].value=keep[k];});
+    updateEditPreview();
+    if(fresh){ const el=$('#ed-title'); el.focus(); }
+    else if(focusId){ const el=document.getElementById(focusId); if(el) el.focus(); }
+  }
+}
+
+function renderStatus(){
+  const el=$('#status');
+  const map={
+    connecting:['','กำลังเชื่อมต่อที่เก็บข้อมูล'],
+    cloud:['ok','เก็บในบัญชีของคุณ เห็นได้เฉพาะคุณ'],
+    local:['warn','เก็บในเบราว์เซอร์เครื่องนี้เท่านั้น (ยังไม่ได้ลงชื่อเข้าใช้)'],
+    slow:['warn','เชื่อมต่อที่เก็บข้อมูลไม่ได้ในตอนนี้ ข้อมูลที่เห็นอาจไม่ล่าสุด'],
+    revoked:['warn','มุมมองนี้ไม่มีสิทธิ์บันทึกงาน']
+  };
+  const s=map[status]||map.connecting;
+  el.className='status '+s[0]; el.textContent=s[1];
+}
+
+/* ---------- sheet view (Excel-style) ---------- */
+const FIELDS=['title','date','time','end','endTime','rest','pri','status','note'];
+function parseStatus(v){ v=String(v||'').trim().toLowerCase(); const m={'ยังไม่เริ่ม':'todo','todo':'todo','กำลังทำ':'doing','doing':'doing','ติดปัญหา':'blocked','blocked':'blocked','เสร็จ':'done','เสร็จแล้ว':'done','done':'done'}; return m[v]||null; }
+const fmtCellDate=s=>s?(s.slice(8,10)+'/'+s.slice(5,7)+'/'+(parseInt(s.slice(0,4),10)+543)):'';
+function cellText(t,k){
+  return (k==='date'||k==='end')?fmtCellDate(t[k]):(k==='pri'?t.pri:(t[k]||''));
+}
+/* returns 'YYYY-MM-DD', '' for blank, null when unreadable */
+function parseCellDate(v){
+  v=String(v||'').trim();
+  if(!v) return '';
+  if(v==='วันนี้') return today;
+  if(v==='พรุ่งนี้'){ const n=parse(today); n.setDate(n.getDate()+1); return fromDate(n); }
+  let y,m,d,mt;
+  if((mt=v.match(/^(\d{4})[\/\-.](\d{1,2})[\/\-.](\d{1,2})$/))){ y=+mt[1]; m=+mt[2]; d=+mt[3]; }
+  else if((mt=v.match(/^(\d{1,2})[\/\-.](\d{1,2})(?:[\/\-.](\d{2,4}))?$/))){
+    d=+mt[1]; m=+mt[2]; y=mt[3]?+mt[3]:view.y;
+    if(mt[3]&&mt[3].length===2) y=y>=43?y+1957:y+2000;
+  }else return null;
+  if(y>2400) y-=543;
+  const dt=new Date(y,m-1,d);
+  if(dt.getFullYear()!==y||dt.getMonth()!==m-1||dt.getDate()!==d) return null;
+  return fromDate(dt);
+}
+function parseCellTime(v){
+  v=String(v||'').trim().replace(/\s*น\.?$/,'');
+  if(!v) return '';
+  let h,mi,mt;
+  if((mt=v.match(/^(\d{1,2})[:.](\d{2})$/))){ h=+mt[1]; mi=+mt[2]; }
+  else if((mt=v.match(/^(\d{1,2})$/))){ h=+mt[1]; mi=0; }
+  else if((mt=v.match(/^(\d{1,2})(\d{2})$/))){ h=+mt[1]; mi=+mt[2]; }
+  else return null;
+  if(h>23||mi>59) return null;
+  return pad(h)+':'+pad(mi);
+}
+function parsePri(v){
+  v=String(v||'').trim().toLowerCase();
+  if(['สูง','ด่วน','high','h','1'].indexOf(v)>=0) return 'high';
+  if(['ต่ำ','low','l','3'].indexOf(v)>=0) return 'low';
+  if(['กลาง','mid','medium','m','2'].indexOf(v)>=0) return 'mid';
+  return null;
+}
+
+function sheetList(){
+  const L=src().filter(pass).slice();
+  if(sheetSort){
+    const f=sheetSort.f, dir=sheetSort.dir;
+    const key=t=>f==='done'?(t.done?1:0):(f==='pri'?PRI.indexOf(t.pri):f==='status'?ST.indexOf(t.status):(f==='hours'?(workMinutes(t)===null?'':workMinutes(t)):(t[f]||'')));
+    L.sort((a,b)=>{
+      const ka=key(a), kb=key(b);
+      const ea=(ka===''), eb=(kb==='');
+      if(ea!==eb) return ea?1:-1;
+      if(ka<kb) return -dir;
+      if(ka>kb) return dir;
+      return a.created-b.created;
+    });
+  }else{
+    L.sort((a,b)=>a.created-b.created||(a.id<b.id?-1:1));
+  }
+  return L;
+}
+
+function makeRow(){
+  const tr=document.createElement('tr');
+  tr.innerHTML=
+    '<td class="rn"></td>'+
+    '<td class="ck"><input type="checkbox" data-f="done" aria-label="เสร็จแล้ว"></td>'+
+    '<td><input class="cell" data-f="title" maxlength="200" aria-label="ชื่องาน" autocomplete="off"></td>'+
+    '<td><input class="cell mono" data-f="date" inputmode="numeric" placeholder="เลือกวันที่" aria-label="วันเริ่ม" autocomplete="off"></td>'+
+    '<td><input class="cell mono" data-f="time" inputmode="numeric" placeholder="เลือกเวลา" aria-label="เวลาเริ่ม" autocomplete="off"></td>'+
+    '<td><input class="cell mono" data-f="end" inputmode="numeric" placeholder="เลือกวันที่" aria-label="วันสิ้นสุด" autocomplete="off"></td>'+
+    '<td><input class="cell mono" data-f="endTime" inputmode="numeric" placeholder="เลือกเวลา" aria-label="เวลาสิ้นสุด" autocomplete="off"></td>'+
+    '<td><input class="cell mono" data-f="rest" inputmode="numeric" placeholder="0" aria-label="เวลาพัก (นาที)" autocomplete="off"></td>'+
+    '<td class="hrs"></td>'+
+    '<td><select class="cell" data-f="pri" aria-label="ความสำคัญ"><option value="high">สูง</option><option value="mid">กลาง</option><option value="low">ต่ำ</option></select></td>'+
+    '<td><select class="cell" data-f="status" aria-label="สถานะ">'+stOpts('todo')+'</select></td>'+
+    '<td><input class="cell" data-f="note" maxlength="1000" placeholder="วิธีแก้ไข / หมายเหตุ" aria-label="หมายเหตุ / วิธีแก้ไข" autocomplete="off"></td>'+
+    '<td class="rx"><button type="button" class="x" data-act="sdel" tabindex="-1" aria-label="ลบแถว">×</button></td>';
+  return tr;
+}
+function makeNewRow(){
+  const tr=makeRow();
+  tr.className='newrow';
+  tr.querySelector('.rn').textContent='+';
+  tr.querySelector('[data-f="done"]').disabled=true;
+  const ti=tr.querySelector('[data-f="title"]');
+  ti.placeholder='พิมพ์ชื่องานใหม่ที่นี่ แล้วกด Enter';
+  ti.setAttribute('aria-label','ชื่องานใหม่');
+  tr.querySelector('[data-f="date"]').value=fmtCellDate(sel);
+  tr.querySelector('[data-f="pri"]').value='mid';
+  return tr;
+}
+function setIdle(el,val){
+  if(document.activeElement!==el&&el.value!==val) el.value=val;
+}
+function updateRow(tr,t,n){
+  tr.dataset.id=t.id;
+  tr.className=(t.done?'done ':'')+(t.example?'ex ':'')+'p-'+t.pri+' s-'+(t.status||'todo');
+  tr.querySelector('.rn').textContent=n;
+  const g=k=>tr.querySelector('[data-f="'+k+'"]');
+  g('done').checked=t.done;
+  setIdle(g('title'),t.title); setIdle(g('date'),fmtCellDate(t.date)); setIdle(g('time'),t.time); setIdle(g('end'),fmtCellDate(t.end)); setIdle(g('endTime'),t.endTime); setIdle(g('note'),t.note);
+  setIdle(g('pri'),t.pri); setIdle(g('rest'),t.rest?String(t.rest):''); setIdle(g('status'),t.status||(t.done?'done':'todo'));
+  g('date').classList.toggle('late',isLate(t));
+  g('end').classList.toggle('late',isLate(t));
+  const wm=workMinutes(t), hc=tr.querySelector('.hrs');
+  hc.textContent=wm===null?'':fmtDur(wm);
+  hc.title=wm===null?'':'= '+(Math.round(wm/dayMin()*100)/100)+' วันทำงาน (วันละ '+fmtDur(dayMin())+')';
+  ['title','date','time','end','endTime','rest','note'].forEach(k=>{ g(k).readOnly=!!t.example; });
+  g('pri').disabled=!!t.example; g('status').disabled=!!t.example;
+}
+
+function renderSheet(){
+  const on=viewMode==='sheet';
+  $('#sheet').hidden=!on;
+  $('#main').hidden=on;
+  $('#nav').hidden=on;
+  if(!on) return;
+  $('#sheetDemo').hidden=!showExamples;
+  const body=$('#sheetBody');
+  const ae=document.activeElement;
+  let fr=null;
+  if(ae&&body.contains(ae)&&ae.dataset&&ae.dataset.f){
+    const r=ae.closest('tr'); fr={id:r.dataset.id||'',f:ae.dataset.f,isNew:r.classList.contains('newrow')};
+  }
+  let nr=body.querySelector('tr.newrow');
+  if(!nr){ nr=makeNewRow(); body.appendChild(nr); }
+  const list=sheetList();
+  const totMin=list.reduce((a,t)=>a+(workMinutes(t)||0),0);
+  $('#sheetTotal').textContent=totMin?fmtDur(totMin):'—';
+  const have=new Map();
+  body.querySelectorAll('tr[data-id]').forEach(r=>have.set(r.dataset.id,r));
+  const keep=new Set(list.map(t=>t.id));
+  have.forEach((r,id)=>{ if(!keep.has(id)) r.remove(); });
+  let cursor=body.firstElementChild;
+  list.forEach((t,i)=>{
+    let tr=have.get(t.id);
+    if(!tr||!tr.isConnected) tr=makeRow();
+    updateRow(tr,t,i+1);
+    if(tr===cursor) cursor=cursor.nextElementSibling;
+    else body.insertBefore(tr,cursor);
+  });
+  if(fr){
+    const row=fr.isNew?nr:Array.from(body.children).find(r=>r.dataset.id===fr.id);
+    const el=row&&row.querySelector('[data-f="'+fr.f+'"]');
+    if(el&&document.activeElement!==el) el.focus({preventScroll:true});
+  }
+  document.querySelectorAll('.hbtn[data-f]').forEach(b=>{
+    const on2=sheetSort&&sheetSort.f===b.dataset.f;
+    b.querySelector('.arr').textContent=on2?(sheetSort.dir===1?'▲':'▼'):'';
+    b.closest('th').setAttribute('aria-sort',on2?(sheetSort.dir===1?'ascending':'descending'):'none');
+  });
+}
+
+function focusCell(tr,f){
+  const el=tr&&tr.querySelector('[data-f="'+f+'"]');
+  if(!el||el.disabled) return;
+  el.focus();
+  if(el.tagName==='INPUT'&&el.type!=='checkbox'&&el.select) el.select();
+}
+
+function commitCell(el){
+  const tr=el.closest('tr');
+  if(!tr||tr.classList.contains('newrow')) return;
+  const t=find(tr.dataset.id); if(!t) return;
+  const k=el.dataset.f;
+  if(t.example){
+    if(k==='done'){ t.done=el.checked; t.status=t.done?'done':'todo'; renderAll(); }
+    return;
+  }
+  const nt=Object.assign({},t);
+  let bad='';
+  if(k==='done'){ nt.done=el.checked; nt.status=nt.done?'done':(t.status==='done'?'todo':t.status); }
+  else if(k==='status'){ nt.status=el.value; nt.done=nt.status==='done'; }
+  else if(k==='rest'){
+    const v=el.value.trim();
+    if(v===''||/^\d{1,4}$/.test(v)) nt.rest=+v||0; else bad='ใส่เวลาพักเป็นตัวเลขนาที เช่น 15';
+  }
+  else if(k==='title'){
+    const v=el.value.trim();
+    if(!v){ toast('ชื่องานว่างไม่ได้'); el.value=t.title; return; }
+    nt.title=v.slice(0,200); el.value=nt.title;
+  }else if(k==='date'||k==='end'){
+    const v=parseCellDate(el.value);
+    if(v===null) bad='วันที่ไม่ถูกต้อง ลองพิมพ์ 5/11/2569 หรือ 5/11'; else nt[k]=v;
+  }else if(k==='time'||k==='endTime'){
+    const v=parseCellTime(el.value);
+    if(v===null) bad='เวลาไม่ถูกต้อง ลองพิมพ์ 09:30'; else nt[k]=v;
+  }else if(k==='pri') nt.pri=el.value;
+  else if(k==='note'){ nt.note=el.value.trim().slice(0,1000); el.value=nt.note; }
+  if(!bad){ const re=rangeError(nt); if(re) bad=re; }
+  if(bad){ toast(bad); el.value=cellText(t,k); return; }
+  if(k==='date'||k==='end') el.value=fmtCellDate(nt[k]);
+  if(k==='time'||k==='endTime') el.value=nt[k];
+  if(k==='rest') el.value=nt.rest||'';
+  if(FIELDS.concat(['done']).every(f=>nt[f]===t[f])) return;
+  save(nt).catch(fail);
+}
+
+function commitNew(refocus){
+  const tr=$('#sheetBody tr.newrow'); if(!tr) return;
+  const g=k=>tr.querySelector('[data-f="'+k+'"]');
+  const title=g('title').value.trim();
+  if(!title){ if(refocus) g('title').focus(); return; }
+  const d=parseCellDate(g('date').value), tm=parseCellTime(g('time').value);
+  const ed=parseCellDate(g('end').value), et=parseCellTime(g('endTime').value);
+  const chk=[[d,'date','วันเริ่ม','5/11/2569 หรือ 5/11'],[tm,'time','เวลาเริ่ม','09:30'],[ed,'end','วันสิ้นสุด','5/11/2569 หรือ 5/11'],[et,'endTime','เวลาสิ้นสุด','17:00']].find(x=>x[0]===null);
+  if(chk){ toast(chk[2]+'ไม่ถูกต้อง ลองพิมพ์ '+chk[3]); g(chk[1]).focus(); return; }
+  const rv=g('rest').value.trim();
+  if(rv!==''&&!/^\d{1,4}$/.test(rv)){ toast('ใส่เวลาพักเป็นตัวเลขนาที เช่น 15'); g('rest').focus(); return; }
+  const st=g('status').value;
+  const t={id:newId(),title:title.slice(0,200),date:d,time:tm,end:ed,endTime:et,pri:g('pri').value,note:g('note').value.trim().slice(0,1000),done:st==='done',status:st,rest:+rv||0,created:Date.now()};
+  const re=rangeError(t);
+  if(re){ toast(re); g(ed?'end':(et?'endTime':'date')).focus(); return; }
+  dismissExamples();
+  g('title').value=''; g('time').value=''; g('end').value=''; g('endTime').value=''; g('note').value=''; g('rest').value=''; g('status').value='todo';
+  g('date').value=fmtCellDate(d);
+  updateNewHrs();
+  renderAll();
+  save(t).catch(fail);
+  if(refocus) focusCell(tr,'title');
+}
+
+const sheetEl=$('#sheet');
+sheetEl.addEventListener('change',e=>{
+  const el=e.target;
+  if(el.dataset&&el.dataset.f) commitCell(el);
+});
+function updateNewHrs(){
+  const tr=$('#sheetBody tr.newrow'); if(!tr) return;
+  const v=k=>tr.querySelector('[data-f="'+k+'"]').value;
+  const t={date:parseCellDate(v('date')),time:parseCellTime(v('time')),end:parseCellDate(v('end')),endTime:parseCellTime(v('endTime')),rest:v('rest')};
+  const c=tr.querySelector('.hrs');
+  if(t.date===null||t.time===null||t.end===null||t.endTime===null){ c.textContent=''; return; }
+  const m=workMinutes(t);
+  c.textContent=m===null?'':fmtDur(m);
+}
+sheetEl.addEventListener('input',e=>{ if(e.target.closest&&e.target.closest('tr.newrow')) updateNewHrs(); });
+sheetEl.addEventListener('focusout',e=>{
+  const nr=e.target.closest&&e.target.closest('tr.newrow');
+  if(!nr) return;
+  if(e.relatedTarget&&nr.contains(e.relatedTarget)) return;
+  commitNew(false);
+});
+sheetEl.addEventListener('keydown',e=>{
+  const el=e.target, f=el.dataset&&el.dataset.f;
+  if(!f) return;
+  const tr=el.closest('tr'); if(!tr) return;
+  const isNew=tr.classList.contains('newrow');
+  if((e.ctrlKey||e.metaKey)&&e.key==='Delete'){
+    if(isNew) return;
+    e.preventDefault();
+    const x=tr.querySelector('[data-act="sdel"]'); if(x) x.click();
+    return;
+  }
+  if(e.key==='Escape'){
+    if(!isNew){ const t=find(tr.dataset.id); if(t&&el.type!=='checkbox') el.value=cellText(t,f); }
+    el.blur(); return;
+  }
+  if(f==='done'||f==='pri'||f==='status'||e.altKey||e.ctrlKey||e.metaKey) return;
+  if(e.key==='Enter'&&isNew){ e.preventDefault(); commitNew(true); return; }
+  const dir=e.key==='Enter'?(e.shiftKey?-1:1):(e.key==='ArrowDown'?1:(e.key==='ArrowUp'?-1:0));
+  if(!dir) return;
+  e.preventDefault();
+  const next=dir>0?tr.nextElementSibling:tr.previousElementSibling;
+  if(next) focusCell(next,f);
+});
+sheetEl.addEventListener('paste',e=>{
+  const el=e.target, f0=el.dataset&&el.dataset.f;
+  if(!f0||f0==='done') return;
+  const txt=(e.clipboardData&&e.clipboardData.getData('text'))||'';
+  if(txt.indexOf('\t')<0&&txt.indexOf('\n')<0) return;
+  e.preventDefault();
+  const rows=txt.replace(/\r/g,'').split('\n');
+  while(rows.length&&rows[rows.length-1]==='') rows.pop();
+  if(!rows.length) return;
+  const tr=el.closest('tr');
+  const wasNew=tr.classList.contains('newrow');
+  const rowId=tr.dataset.id;
+  const hadExamples=showExamples;
+  dismissExamples();
+  const list=sheetList();
+  const r0=(wasNew||hadExamples)?list.length:Math.max(0,list.findIndex(t=>t.id===rowId));
+  const c0=FIELDS.indexOf(f0);
+  let bad=0;
+  const ops=[];
+  rows.slice(0,200).forEach((line,i)=>{
+    const base=list[r0+i];
+    const t=base?Object.assign({},base):{id:newId(),title:'',date:'',time:'',end:'',endTime:'',pri:'mid',note:'',done:false,status:'todo',rest:0,created:Date.now()+i};
+    line.split('\t').forEach((c,j)=>{
+      const k=FIELDS[c0+j]; if(!k) return;
+      c=c.trim();
+      if(k==='title'){ if(c) t.title=c.slice(0,200); }
+      else if(k==='date'||k==='end'){ const v=parseCellDate(c); if(v===null) bad++; else t[k]=v; }
+      else if(k==='time'||k==='endTime'){ const v=parseCellTime(c); if(v===null) bad++; else t[k]=v; }
+      else if(k==='pri'){ if(c){ const v=parsePri(c); if(v===null) bad++; else t.pri=v; } }
+      else if(k==='rest'){ if(c==='') t.rest=0; else if(/^\d{1,4}$/.test(c)) t.rest=+c; else bad++; }
+      else if(k==='status'){ if(c){ const v=parseStatus(c); if(v===null) bad++; else t.status=v; } }
+      else if(k==='note') t.note=c.slice(0,1000);
+    });
+    t.done=t.status==='done';
+    if(t.title){ if(rangeError(t)){ t.end=''; t.endTime=''; bad++; } ops.push(t); }
+  });
+  if(!ops.length){ toast('ไม่พบแถวที่มีชื่องาน'); renderAll(); return; }
+  renderAll();
+  Promise.all(ops.map(t=>save(t)))
+    .then(()=>toast('วางข้อมูล '+ops.length+' แถว'+(bad?' (ข้าม '+bad+' ช่องที่รูปแบบไม่ถูกต้อง)':'')))
+    .catch(fail);
+});
+
+/* ---------- date / time pickers (sheet view) ---------- */
+const PK_F={date:'d',end:'d',time:'t',endTime:'t'};
+const pkEl=document.createElement('div'); pkEl.id='pk'; pkEl.hidden=true; document.body.appendChild(pkEl);
+let pk=null;
+function setVal(el,v){ el.value=v; el.dispatchEvent(new Event('input',{bubbles:true})); el.dispatchEvent(new Event('change',{bubbles:true})); }
+function closePk(){ pk=null; pkEl.hidden=true; }
+function placePk(){
+  if(!pk) return;
+  if(!pk.el.isConnected){ closePk(); return; }
+  const r=pk.el.getBoundingClientRect(), w=pkEl.offsetWidth, h=pkEl.offsetHeight;
+  pkEl.style.left=Math.max(8,Math.min(r.left,innerWidth-w-8))+'px';
+  pkEl.style.top=((r.bottom+h+8>innerHeight&&r.top>h+8)?r.top-h-4:r.bottom+4)+'px';
+}
+function pkState(el){
+  const f=el.dataset.f, tr=el.closest('tr');
+  if(PK_F[f]==='d'){
+    const v=parseCellDate(el.value)||'';
+    const sd=f==='end'?parseCellDate(tr.querySelector('[data-f="date"]').value):'';
+    const b=parse(v||sd||sel);
+    return {k:'d',el:el,v:v,y:b.getFullYear(),m:b.getMonth()};
+  }
+  const v=parseCellTime(el.value);
+  return {k:'t',el:el,h:v?+v.slice(0,2):null,mi:v?+v.slice(3):null};
+}
+function renderPk(){
+  let h='';
+  if(pk.k==='d'){
+    const y=pk.y, m=pk.m, lead=new Date(y,m,1).getDay(), n=new Date(y,m+1,0).getDate();
+    h+='<div class="pk-nav"><button type="button" data-pk="yp" aria-label="ปีก่อนหน้า">«</button><button type="button" data-pk="mp" aria-label="เดือนก่อนหน้า">‹</button><b>'+TH_MONTHS[m]+' '+(y+543)+'</b><button type="button" data-pk="mn" aria-label="เดือนถัดไป">›</button><button type="button" data-pk="yn" aria-label="ปีถัดไป">»</button></div>'+
+       '<div class="pk-wk">'+TH_DAY_SHORT.map(x=>'<span>'+x+'</span>').join('')+'</div><div class="pk-days">'+'<span></span>'.repeat(lead);
+    for(let d=1;d<=n;d++){
+      const s=ymd(y,m,d);
+      h+='<button type="button" class="pk-d'+(s===pk.v?' sel':'')+(s===today?' tod':'')+((new Date(y,m,d).getDay()===0||holiday(s))?' red':'')+'" data-pk="d" data-v="'+s+'" aria-pressed="'+(s===pk.v)+'">'+d+'</button>';
+    }
+    h+='</div><div class="pk-f"><button type="button" data-pk="clr">ล้าง</button><button type="button" data-pk="tod">วันนี้</button></div>';
+  }else{
+    h+='<div class="pk-l">ชั่วโมง</div><div class="pk-g">';
+    for(let i=0;i<24;i++) h+='<button type="button" class="pk-t'+(i===pk.h?' sel':'')+'" data-pk="h" data-v="'+i+'">'+pad(i)+'</button>';
+    h+='</div><div class="pk-l">นาที</div><div class="pk-g">';
+    for(let i=0;i<60;i+=5) h+='<button type="button" class="pk-t'+(i===pk.mi?' sel':'')+'" data-pk="mi" data-v="'+i+'">'+pad(i)+'</button>';
+    h+='</div><div class="pk-f"><button type="button" data-pk="clr">ล้าง</button><button type="button" data-pk="q" data-v="'+S.ws+'">เริ่มงาน '+S.ws+'</button><button type="button" data-pk="q" data-v="'+S.we+'">เลิกงาน '+S.we+'</button></div>';
+  }
+  pkEl.innerHTML=h;
+}
+function openPk(el){ pk=pkState(el); renderPk(); pkEl.hidden=false; placePk(); }
+pkEl.addEventListener('mousedown',e=>e.preventDefault());
+pkEl.addEventListener('click',e=>{
+  const b=e.target.closest('[data-pk]'); if(!b||!pk) return;
+  const a=b.dataset.pk, el=pk.el;
+  const nav={yp:[-1,0],yn:[1,0],mp:[0,-1],mn:[0,1]}[a];
+  if(nav){ const d=new Date(pk.y+nav[0],pk.m+nav[1],1); pk.y=d.getFullYear(); pk.m=d.getMonth(); renderPk(); placePk(); }
+  else if(a==='d'){ setVal(el,fmtCellDate(b.dataset.v)); closePk(); }
+  else if(a==='tod'){ setVal(el,fmtCellDate(today)); closePk(); }
+  else if(a==='clr'){ setVal(el,''); closePk(); }
+  else if(a==='q'){ setVal(el,b.dataset.v); closePk(); }
+  else if(a==='h'||a==='mi'){
+    const v=+b.dataset.v; if(a==='h') pk.h=v; else pk.mi=v;
+    if(pk.h==null) pk.h=Math.floor(toMin(S.ws)/60);
+    if(pk.mi==null) pk.mi=0;
+    setVal(el,pad(pk.h)+':'+pad(pk.mi));
+    if(a==='mi') closePk(); else renderPk();
+  }
+});
+sheetEl.addEventListener('click',e=>{
+  const el=e.target, f=el.dataset&&el.dataset.f;
+  if(!PK_F[f]||el.readOnly||(pk&&pk.el===el)) return;
+  openPk(el);
+});
+sheetEl.addEventListener('keydown',e=>{
+  const f=e.target.dataset&&e.target.dataset.f;
+  if(PK_F[f]&&e.altKey&&e.key==='ArrowDown'&&!e.target.readOnly){ e.preventDefault(); openPk(e.target); }
+});
+sheetEl.addEventListener('input',e=>{ if(pk&&pk.el===e.target){ pk=pkState(e.target); renderPk(); } });
+sheetEl.addEventListener('focusout',e=>{ if(pk&&e.target===pk.el) closePk(); });
+document.addEventListener('mousedown',e=>{ if(pk&&!pkEl.contains(e.target)&&e.target!==pk.el) closePk(); });
+window.addEventListener('scroll',placePk,true);
+window.addEventListener('resize',placePk);
+
+/* ---------- selection / navigation ---------- */
+function selectDate(s,opts){
+  opts=opts||{};
+  sel=s; const d=parse(s);
+  view={y:d.getFullYear(),m:d.getMonth()};
+  tab='day';
+  $('#add-date').value=sel;
+  renderAll();
+  const b=document.querySelector('.day[data-date="'+s+'"]');
+  if(b&&opts.focus) b.focus({preventScroll:true});
+  if(opts.scroll&&window.matchMedia('(max-width:899px)').matches){
+    const reduce=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+    $('#panel').scrollIntoView({block:'nearest',behavior:reduce?'auto':'smooth'});
+  }
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click',e=>{
+  const el=e.target.closest('[data-act]');
+  if(!el) return;
+  const act=el.dataset.act;
+  const li=el.closest('[data-id]');
+  const id=li?li.dataset.id:null;
+  switch(act){
+    case 'day': selectDate(el.dataset.date,{focus:true,scroll:true}); break;
+    case 'prev': case 'next': {
+      const d=new Date(view.y,view.m+(act==='next'?1:-1),1);
+      view={y:d.getFullYear(),m:d.getMonth()}; renderAll(); break;
+    }
+    case 'today': selectDate(todayStr(),{}); break;
+    case 'filter': filter=el.dataset.v; renderAll(); break;
+    case 'view': viewMode=el.dataset.v==='cal'?'cal':'sheet'; lsSet(KEY_VIEW,viewMode); editing=null; renderAll(); break;
+    case 'ws': {
+      const p=$('#wsPanel'); p.hidden=!p.hidden;
+      el.setAttribute('aria-expanded',String(!p.hidden));
+      if(!p.hidden) renderSettings(true);
+      break;
+    }
+    case 'wsday': {
+      const v=+el.dataset.v; const days=S.days.slice(); const i=days.indexOf(v);
+      if(i>=0) days.splice(i,1); else days.push(v);
+      if(!days.length){ toast('เลือกวันทำงานอย่างน้อย 1 วัน'); break; }
+      S=Object.assign({},S,{days:days.sort((a,b)=>a-b)}); saveSettings(); break;
+    }
+    case 'sort': {
+      const f=el.dataset.f;
+      if(sheetSort&&sheetSort.f===f){ sheetSort=sheetSort.dir===1?{f:f,dir:-1}:null; }
+      else sheetSort={f:f,dir:1};
+      renderSheet(); break;
+    }
+    case 'sdel': {
+      const t=find(id); if(!t||t.example) break;
+      if(!el.classList.contains('arm')){
+        el.classList.add('arm'); el.textContent='ลบ?';
+        setTimeout(()=>{ el.classList.remove('arm'); el.textContent='×'; },3000);
+      }else{
+        remove(id).then(()=>toast('ลบงานแล้ว')).catch(fail);
+      }
+      break;
+    }
+    case 'tab': tab=el.dataset.v; editing=null; renderAll(); break;
+    case 'clear-ex': dismissExamples(); renderAll(); break;
+    case 'toggle': {
+      const t=find(id); if(!t) break;
+      const nd=!t.done, ns=nd?'done':(t.status==='done'?'todo':(t.status||'todo'));
+      if(t.example){ t.done=nd; t.status=ns; renderAll(); }
+      else save(Object.assign({},t,{done:nd,status:ns})).catch(fail);
+      break;
+    }
+    case 'edit': editing=id; renderPanel(true); break;
+    case 'cancel': editing=null; renderPanel(); break;
+    case 'del': {
+      const w=el.closest('.del-wrap'); el.hidden=true; w.querySelector('.del-confirm').hidden=false;
+      w.querySelector('[data-act="del-yes"]').focus(); break;
+    }
+    case 'del-no': {
+      const w=el.closest('.del-wrap'); w.querySelector('.del-confirm').hidden=true;
+      const b=w.querySelector('[data-act="del"]'); b.hidden=false; b.focus(); break;
+    }
+    case 'del-yes': {
+      const target=editing; editing=null; renderPanel();
+      if(target) remove(target).then(()=>toast('ลบงานแล้ว')).catch(fail);
+      break;
+    }
+  }
+});
+
+$('#grid').addEventListener('keydown',e=>{
+  const b=e.target.closest('.day'); if(!b) return;
+  const k={ArrowLeft:-1,ArrowRight:1,ArrowUp:-7,ArrowDown:7}[e.key];
+  if(!k) return;
+  e.preventDefault();
+  const d=parse(b.dataset.date); d.setDate(d.getDate()+k);
+  selectDate(fromDate(d),{focus:true});
+});
+
+$('#panel').addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&editing){ editing=null; renderPanel(); }
+});
+
+$('#addForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const title=$('#add-title').value.trim();
+  if(!title){ $('#add-title').focus(); return; }
+  const t={id:newId(),title:title,date:$('#add-date').value,time:$('#add-time').value,end:$('#add-end').value,endTime:$('#add-endtime').value,pri:$('#add-pri').value,note:'',done:false,status:'todo',rest:0,created:Date.now()};
+  const re=rangeError(t);
+  if(re){ toast(re); return; }
+  dismissExamples();
+  $('#add-title').value='';
+  $('#add-time').value='';
+  $('#add-end').value='';
+  $('#add-endtime').value='';
+  if(t.date){
+    sel=t.date; const d=parse(t.date); view={y:d.getFullYear(),m:d.getMonth()};
+    if(tab!=='all') tab='day';
+  }
+  editing=null;
+  renderAll();
+  save(t).then(()=>{ $('#add-title').focus(); }).catch(fail);
+});
+
+$('#panel').addEventListener('submit',e=>{
+  const f=e.target.closest('#editForm'); if(!f) return;
+  e.preventDefault();
+  const li=f.closest('[data-id]'); const t=li&&find(li.dataset.id); if(!t) return;
+  const title=f.elements.title.value.trim();
+  if(!title){ toast('ใส่ชื่องานก่อนบันทึก'); f.elements.title.focus(); return; }
+  const nt=Object.assign({},t,{title:title,date:f.elements.date.value,time:f.elements.time.value,end:f.elements.end.value,endTime:f.elements.endTime.value,pri:f.elements.pri.value,status:f.elements.status.value,done:f.elements.status.value==='done',rest:Math.min(9999,parseInt(f.elements.rest.value,10)||0),note:f.elements.note.value.trim()});
+  const re=rangeError(nt);
+  if(re){ toast(re); return; }
+  editing=null;
+  if(nt.date&&tab==='day'&&nt.date!==sel){
+    sel=nt.date; const d=parse(nt.date); view={y:d.getFullYear(),m:d.getMonth()};
+    $('#add-date').value=sel;
+  }
+  renderAll();
+  save(nt).catch(fail);
+});
+
+document.addEventListener('visibilitychange',()=>{
+  if(!document.hidden&&todayStr()!==today) renderAll();
+});
+
+/* ---------- connect storage ---------- */
+function goLocal(){
+  mode='local'; status='local';
+  tasks=(lsGet(KEY_LOCAL)||[]).map(t=>norm(t.id,t));
+  showExamples=tasks.length===0&&!lsGet(KEY_NOEX);
+  readyRes(); renderAll();
+}
+
+async function connect(){
+  const cl=window.claude;
+  let db=null, usr=null, uid=null;
+  try{
+    if(cl&&cl.use){
+      const r=await Promise.all([cl.use('db'),cl.use('user')]);
+      db=r[0]; usr=r[1];
+      if(db&&usr) uid=await usr.id();
+    }
+  }catch(e){}
+  if(!db||!uid){ goLocal(); return; }
+  coll=db.collection('data/users/'+uid);
+  mode='cloud'; status='connecting';
+  readyRes(); renderStatus();
+  let fresh=false;
+  const timer=setTimeout(()=>{ if(!fresh){ status='slow'; renderStatus(); } },10000);
+  coll.onSnapshot(snap=>{
+    if(!snap.metadata.fromCache){ fresh=true; clearTimeout(timer); status='cloud'; }
+    const sd=snap.docs.find(d=>d.id==='_settings'&&d.exists);
+    if(sd){ S=normSettings(sd.data()); lsSet(KEY_SET,S); }
+    tasks=snap.docs.filter(d=>d.exists&&d.id!=='_settings').map(d=>norm(d.id,d.data()));
+    lsSet(KEY_CACHE,tasks);
+    showExamples=tasks.length===0&&!lsGet(KEY_NOEX);
+    renderAll();
+  },err=>{
+    clearTimeout(timer);
+    status=(err&&err.code==='revoked')?'revoked':'slow';
+    renderStatus();
+  });
+}
+
+/* ---------- boot ---------- */
+examples=makeExamples();
+(function boot(){
+  S=normSettings(lsGet(KEY_SET));
+  const cached=lsGet(KEY_CACHE)||lsGet(KEY_LOCAL);
+  if(cached&&cached.length){ tasks=cached.map(t=>norm(t.id,t)); showExamples=false; }
+  else showExamples=!lsGet(KEY_NOEX);
+  $('#add-date').value=sel;
+  renderAll();
+  connect();
+})();
+})();
+</script>
+
+</body></html>
