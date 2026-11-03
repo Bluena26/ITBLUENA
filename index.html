@@ -220,11 +220,39 @@ textarea.field{resize:vertical;min-height:70px}
 .sheet tfoot td{position:sticky;bottom:0;z-index:1;height:40px;padding:0 10px;background:var(--surface-2);border-top:1px solid var(--ink-3);border-bottom:0;font-size:13px;font-weight:600;color:var(--ink-2)}
 .sheet tfoot td.hrs{color:var(--ink)}
 
+/* MASTER panel (department list) */
+.md{margin:0 0 16px;padding:14px;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+.md-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 12px;margin-bottom:10px}
+.md-head h2{font-family:var(--font-display);font-size:17px;font-weight:600}
+.md-head span{font-size:13px;color:var(--ink-2)}
+.md-add{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.md-add .field{flex:1 1 220px;width:auto;max-width:380px}
+.md-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:8px}
+.md-item{display:flex;align-items:center;gap:8px;padding:3px 6px 3px 3px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2)}
+.md-item .field{flex:1 1 auto;border-color:transparent;background:transparent}
+.md-item .field:hover{border-color:var(--line)}
+.md-item .field:focus-visible{background:var(--surface);border-color:var(--accent)}
+.md-cnt{flex:none;font-family:var(--font-mono);font-size:12px;color:var(--ink-3);white-space:nowrap}
+.md-empty{grid-column:1/-1;font-size:13.5px;color:var(--ink-2)}
+.tag.dept{background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--line);color:var(--ink)}
+
+/* Excel import / export panel */
+.xl{margin:0 0 16px;padding:14px;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+.xl-btns{display:flex;flex-wrap:wrap;gap:8px;margin:2px 0 10px}
+.xl-help{font-size:13px;line-height:1.65;color:var(--ink-2)}
+.xl-prev{margin-top:12px;padding:12px 14px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);font-size:13.5px;line-height:1.6}
+.xl-prev b{font-weight:600}
+.xl-prev ul{list-style:disc;padding-left:20px;margin:4px 0 0}
+.xl-prev .bad{color:var(--hi-text)}
+.xl-prev label{display:flex;align-items:flex-start;gap:8px;margin-top:10px}
+.xl-prev input[type="checkbox"]{width:18px;height:18px;margin-top:2px;accent-color:var(--accent);flex:none}
+.xl-act{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+
 /* sheet (Excel-style view) */
 .sheet-wrap{background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden;min-width:0}
 .sheet-wrap .demo{margin:0;border-radius:0}
-.sheet-scroll{overflow:auto;max-height:min(72vh,820px)}
-.sheet{width:100%;min-width:1460px;border-collapse:separate;border-spacing:0;table-layout:fixed;font-size:14px}
+.sheet-scroll{overflow:auto;max-height:min(72vh,820px);overflow-anchor:none;scroll-padding-top:40px;scroll-padding-bottom:46px}
+.sheet{width:100%;min-width:1560px;border-collapse:separate;border-spacing:0;table-layout:fixed;font-size:14px}
 .sheet th,.sheet td{padding:0;height:38px;background:var(--surface);border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
 .sheet th:last-child,.sheet td:last-child{border-right:0}
 .sheet thead th{position:sticky;top:0;z-index:2;background:var(--surface-2);font-size:13px;color:var(--ink-2);text-align:left;border-bottom:1px solid var(--ink-3)}
@@ -237,6 +265,7 @@ textarea.field{resize:vertical;min-height:70px}
 .sheet input[type="checkbox"]{width:18px;height:18px;accent-color:var(--accent);vertical-align:middle;cursor:pointer}
 .cell{display:block;width:100%;min-width:0;height:37px;padding:0 10px;border:0;border-radius:0;background:transparent;color:var(--ink);font:inherit;text-overflow:ellipsis}
 .cell.mono{font-family:var(--font-mono);font-size:13px}
+.cell.wrap{display:block;resize:none;overflow:hidden;height:37px;min-height:37px;padding:9px 10px;line-height:1.35;white-space:pre-wrap;overflow-wrap:anywhere;text-overflow:clip}
 .cell::placeholder{color:var(--ink-3);opacity:1}
 .cell:focus{outline:2px solid var(--accent);outline-offset:-2px;background:var(--surface)}
 .cell.late{color:var(--hi-text)}
@@ -292,6 +321,39 @@ select.cell{cursor:pointer}
 .status::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;background:var(--st,var(--ink-3))}
 .status.ok{--st:var(--accent)}
 .status.warn{--st:var(--mid)}
+.ghd{border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);padding:18px;width:min(440px,92vw)}
+.ghd::backdrop{background:rgba(0,0,0,.45)}
+.ghd h2{font-family:var(--font-display);font-size:20px;margin-bottom:6px}
+.ghd label{display:block;font-size:13px;color:var(--ink-2);margin-top:10px}
+.ghd input{display:block;width:100%;margin-top:4px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2)}
+.ghd .hint{font-size:12.5px;color:var(--ink-3);margin-top:12px}
+.ghd .row{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
+.rep{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px}
+.rep-bar{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:flex-end;margin-bottom:14px}
+.rep-bar label{display:grid;gap:3px;font-size:12.5px;color:var(--ink-2)}
+.rep-bar select{padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);min-height:38px}
+.rep h3{font-family:var(--font-display);font-size:16px;margin:18px 0 8px}
+.rep-sum{margin:0 0 12px;color:var(--ink-2);line-height:1.7}.rep-sum b{color:var(--ink)}.rep .bad{color:var(--hi-text)}
+.rks{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
+.rk{background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.rk b{display:block;font-family:var(--font-mono);font-weight:500;font-size:22px}.rk span{font-size:12.5px;color:var(--ink-2)}
+.rg{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:4px 24px}.rg section{min-width:0}
+.rr{display:grid;grid-template-columns:minmax(70px,120px) 1fr auto;gap:10px;align-items:center;margin:6px 0;font-size:13.5px}
+.rn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rv{font-family:var(--font-mono);font-size:12.5px;color:var(--ink-2);white-space:nowrap}
+.rb{display:flex;height:16px;background:var(--surface-2);border-radius:4px;overflow:hidden}.rb i{display:block;height:100%}
+.rl{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12.5px;color:var(--ink-2);margin-bottom:4px}
+.rl i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px}
+.rcw{display:flex;align-items:flex-end;gap:8px;overflow-x:auto;padding-bottom:4px;min-height:170px}
+.rc{flex:1 0 38px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:3px;font-size:12px;color:var(--ink-2)}
+.rc b{font-family:var(--font-mono);font-weight:500;color:var(--ink)}
+.rcs{width:70%;min-width:20px;display:flex;flex-direction:column;border-radius:4px 4px 0 0;overflow:hidden}
+.rt{overflow-x:auto}.rt table{border-collapse:collapse;width:100%;font-size:13.5px}
+.rt th,.rt td{padding:7px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+.rt th:first-child,.rt td:first-child{text-align:left}
+.rt th{color:var(--ink-2);font-weight:600;background:var(--surface-2)}.rt tr.tot td{font-weight:600;background:var(--surface-2)}
+.rep-empty{color:var(--ink-3);padding:30px 0;text-align:center}
+@media print{.top,.foot,.summary,.rep-bar,.toast{display:none!important}body{background:#fff}.app{padding:0}.rep{border:0}}
 
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));max-width:calc(100% - 32px);padding:10px 16px;border-radius:8px;background:var(--ink);color:var(--bg);font-size:14px;z-index:20}
 
@@ -316,12 +378,15 @@ select.cell{cursor:pointer}
       <div class="seg" role="group" aria-label="มุมมอง">
         <button type="button" data-act="view" data-v="sheet" aria-pressed="true">ตาราง</button>
         <button type="button" data-act="view" data-v="cal" aria-pressed="false">ปฏิทิน</button>
+        <button type="button" data-act="view" data-v="report" aria-pressed="false">รายงาน</button>
       </div>
       <div class="seg" role="group" aria-label="กรองตามสถานะ">
         <button type="button" data-act="filter" data-v="all" aria-pressed="true">ทั้งหมด</button>
         <button type="button" data-act="filter" data-v="open" aria-pressed="false">ค้างอยู่</button>
         <button type="button" data-act="filter" data-v="done" aria-pressed="false">เสร็จแล้ว</button>
       </div>
+      <button type="button" class="btn" data-act="xl" aria-expanded="false" aria-controls="xlPanel">Excel</button>
+      <button type="button" class="btn" data-act="master" aria-expanded="false" aria-controls="mdPanel">MASTER</button>
       <button type="button" class="btn" data-act="ws" aria-expanded="false" aria-controls="wsPanel">เวลาทำงาน</button>
       <div class="nav" id="nav">
         <button type="button" class="btn icon" data-act="prev" aria-label="เดือนก่อนหน้า"><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
@@ -355,6 +420,28 @@ select.cell{cursor:pointer}
     <p class="ws-sum" id="wsSum"></p>
   </section>
 
+  <section class="xl" id="xlPanel" aria-label="นำเข้าและส่งออก Excel" hidden>
+    <div class="md-head"><h2>Excel · นำเข้า / ส่งออก</h2><span>ส่งออกงานเป็นไฟล์ .xlsx · นำเข้างานจากไฟล์ .xlsx หรือ .csv</span></div>
+    <div class="xl-btns">
+      <button type="button" class="btn" data-act="xl-export">ส่งออกงานทั้งหมด (.xlsx)</button>
+      <button type="button" class="btn primary" data-act="xl-pick">นำเข้าจากไฟล์…</button>
+      <button type="button" class="btn" data-act="xl-tpl">ดาวน์โหลด Template</button>
+      <input type="file" id="xlFile" accept=".xlsx,.csv" hidden>
+    </div>
+    <p class="xl-help">กรอกงานตาม Template แล้วนำเข้าได้เลย · ไฟล์ที่ส่งออกจากระบบนี้นำกลับมานำเข้าได้ (คอลัมน์ "รหัส" ทำให้งานเดิมถูกอัปเดตแทนที่จะซ้ำ) · วันที่ใช้รูปแบบ 05/11/2569 (พ.ศ.) หรือ 5/11 · แผนกที่ไม่มีใน MASTER เลือกให้เพิ่มอัตโนมัติได้ตอนนำเข้า</p>
+    <div class="xl-prev" id="xlPrev" hidden></div>
+  </section>
+
+  <section class="md" id="mdPanel" aria-label="MASTER จัดการแผนก" hidden>
+    <div class="md-head"><h2>MASTER · จัดการแผนก</h2><span>เพิ่ม แก้ชื่อ หรือลบแผนก รายการนี้จะไปเป็นตัวเลือกในช่อง "แผนก" ของทุกงาน</span></div>
+    <form class="md-add" id="mdForm" autocomplete="off">
+      <label class="sr" for="md-name">ชื่อแผนกใหม่</label>
+      <input class="field" id="md-name" maxlength="40" placeholder="ชื่อแผนกใหม่ แล้วกด Enter">
+      <button type="submit" class="btn primary">เพิ่มแผนก</button>
+    </form>
+    <ul class="md-list" id="mdList"></ul>
+  </section>
+
   <div class="main" id="main">
     <section class="cal" aria-label="ปฏิทิน">
       <div class="wk" aria-hidden="true">
@@ -386,12 +473,16 @@ select.cell{cursor:pointer}
           <input class="field" type="time" id="add-endtime" name="endTime">
         </div>
         <div class="add-row">
+          <label class="sr" for="add-dept">แผนก</label>
+          <select class="field" id="add-dept" name="dept"><option value="">— ไม่ระบุแผนก —</option></select>
           <label class="sr" for="add-pri">ความสำคัญ</label>
           <select class="field" id="add-pri" name="pri">
             <option value="high">สำคัญสูง</option>
             <option value="mid" selected>สำคัญกลาง</option>
             <option value="low">สำคัญต่ำ</option>
           </select>
+        </div>
+        <div class="add-row">
           <output class="hrs-prev" id="add-hrs" aria-live="polite"></output>
           <button type="submit" class="btn primary">เพิ่ม</button>
         </div>
@@ -400,11 +491,19 @@ select.cell{cursor:pointer}
     </aside>
   </div>
 
+  <section class="rep" id="report" aria-label="รายงาน" hidden>
+    <div class="rep-bar">
+      <label>ช่วงเวลา<select id="repPeriod"></select></label>
+      <label>แผนก<select id="repDept"></select></label>
+      <button type="button" class="btn small" id="repPrint">พิมพ์ / บันทึกเป็น PDF</button>
+    </div>
+    <div id="repBody"></div>
+  </section>
   <section class="sheet-wrap" id="sheet" aria-label="ตารางงาน" hidden>
     <div class="demo" id="sheetDemo" hidden><span>ตัวอย่างงาน พิมพ์ในแถวล่างสุดเพื่อเพิ่มงานแรกของคุณ</span><button type="button" class="btn small" data-act="clear-ex">ล้างตัวอย่าง</button></div>
     <div class="sheet-scroll">
       <table class="sheet">
-        <colgroup><col style="width:46px"><col style="width:48px"><col><col style="width:132px"><col style="width:92px"><col style="width:132px"><col style="width:92px"><col style="width:92px"><col style="width:108px"><col style="width:100px"><col style="width:128px"><col style="width:22%"><col style="width:44px"></colgroup>
+        <colgroup><col style="width:46px"><col style="width:48px"><col><col style="width:132px"><col style="width:92px"><col style="width:132px"><col style="width:92px"><col style="width:150px"><col style="width:108px"><col style="width:100px"><col style="width:128px"><col style="width:22%"><col style="width:44px"></colgroup>
         <thead>
           <tr>
             <th class="hn" scope="col">#</th>
@@ -414,7 +513,7 @@ select.cell{cursor:pointer}
             <th scope="col"><button type="button" class="hbtn" data-act="sort" data-f="time">เวลาเริ่ม<span class="arr"></span></button></th>
             <th scope="col"><button type="button" class="hbtn" data-act="sort" data-f="end">วันสิ้นสุด<span class="arr"></span></button></th>
             <th scope="col"><button type="button" class="hbtn" data-act="sort" data-f="endTime">เวลาสิ้นสุด<span class="arr"></span></button></th>
-            <th scope="col"><button type="button" class="hbtn" data-act="sort" data-f="rest">พัก (นาที)<span class="arr"></span></button></th>
+            <th scope="col"><button type="button" class="hbtn" data-act="sort" data-f="dept">แผนก<span class="arr"></span></button></th>
             <th scope="col"><button type="button" class="hbtn" data-act="sort" data-f="hours">ชม.ทำงาน<span class="arr"></span></button></th>
             <th scope="col"><button type="button" class="hbtn" data-act="sort" data-f="pri">ความสำคัญ<span class="arr"></span></button></th>
             <th scope="col"><button type="button" class="hbtn" data-act="sort" data-f="status">สถานะ<span class="arr"></span></button></th>
@@ -426,7 +525,7 @@ select.cell{cursor:pointer}
         <tfoot><tr><td class="rn"></td><td colspan="7">รวมชั่วโมงทำงานของแถวที่แสดง</td><td class="hrs" id="sheetTotal">—</td><td colspan="4"></td></tr></tfoot>
       </table>
     </div>
-    <p class="sheet-hint">คลิกช่องวันที่/เวลาเพื่อเลือก (หรือพิมพ์เองก็ได้ · Alt+↓ เปิดตัวเลือก) · Tab ไปช่องถัดไป · Enter หรือลูกศรขึ้นลงเลื่อนแถว · Esc ยกเลิกการแก้ · Ctrl+Delete ลบแถว · วางข้อมูลจาก Excel ได้ (เรียงคอลัมน์ ชื่องาน, วันเริ่ม, เวลาเริ่ม, วันสิ้นสุด, เวลาสิ้นสุด, พัก(นาที), ความสำคัญ, สถานะ, หมายเหตุ) · วันที่พิมพ์ได้ เช่น 5/11 หรือ 5/11/2569 · ชั่วโมงทำงานคำนวณจากเวลาทำงานที่ตั้งไว้ (ปุ่ม "เวลาทำงาน" ด้านบน)</p>
+    <p class="sheet-hint">คลิกช่องวันที่/เวลาเพื่อเลือก (หรือพิมพ์เองก็ได้ · Alt+↓ เปิดตัวเลือก) · Tab ไปช่องถัดไป · Enter หรือลูกศรขึ้นลงเลื่อนแถว · Esc ยกเลิกการแก้ · Ctrl+Delete ลบแถว · วางข้อมูลจาก Excel ได้ (ชื่อแผนกต้องตรงกับที่ตั้งไว้ในเมนู MASTER · เรียงคอลัมน์ ชื่องาน, วันเริ่ม, เวลาเริ่ม, วันสิ้นสุด, เวลาสิ้นสุด, แผนก, ความสำคัญ, สถานะ, หมายเหตุ) · วันที่พิมพ์ได้ เช่น 5/11 หรือ 5/11/2569 · ชั่วโมงทำงานคำนวณจากเวลาทำงานที่ตั้งไว้ (ปุ่ม "เวลาทำงาน" ด้านบน)</p>
   </section>
 
   <footer class="foot">
@@ -437,10 +536,20 @@ select.cell{cursor:pointer}
       <span class="lg"><i class="p-mid ring" style="background:transparent;box-shadow:inset 0 0 0 1.5px var(--ink-2)"></i>เสร็จแล้ว</span>
     </div>
     <span class="status" id="status"></span>
+    <button type="button" class="btn small" id="gh-open">เก็บข้อมูลบน GitHub</button>
     <span>วันที่แดงคือวันอาทิตย์และวันหยุดที่มีวันที่คงที่ (ไม่รวมวันพระและวันหยุดชดเชย)</span>
   </footer>
 </div>
 <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<dialog id="gh-dlg" class="ghd"><form id="gh-form">
+  <h2>เก็บข้อมูลบน GitHub</h2>
+  <label>Repository (ชื่อผู้ใช้/ชื่อrepo)<input name="repo" required placeholder="ชื่อผู้ใช้/todo-data" autocomplete="off"></label>
+  <label>Token (Fine-grained · Contents: Read and write)<input name="token" type="password" required autocomplete="off"></label>
+  <label>ไฟล์ข้อมูล<input name="path" value="todo-data.json" autocomplete="off"></label>
+  <label>Branch<input name="branch" value="main" autocomplete="off"></label>
+  <p class="hint">แนะนำให้ใช้ repo แบบ Private แยกต่างหากสำหรับเก็บข้อมูล Token จะถูกเก็บในเบราว์เซอร์เครื่องนี้เท่านั้น</p>
+  <div class="row"><button type="button" class="btn danger small" id="gh-off">ยกเลิกการเชื่อม</button><button type="button" class="btn small" id="gh-cancel">ปิด</button><button type="submit" class="btn primary small">เชื่อมและบันทึก</button></div>
+</form></dialog>
 
 <script>
 (function(){
@@ -463,6 +572,7 @@ const ST=['todo','doing','blocked','done'];
 const ST_LABEL={todo:'ยังไม่เริ่ม',doing:'กำลังทำ',blocked:'ติดปัญหา',done:'เสร็จแล้ว'};
 const stOpts=v=>ST.map(k=>'<option value="'+k+'"'+(k===v?' selected':'')+'>'+ST_LABEL[k]+'</option>').join('');
 const KEY_CACHE='todocal.v1.cache', KEY_LOCAL='todocal.v1.local', KEY_NOEX='todocal.v1.noexamples', KEY_SET='todocal.v1.settings';
+const MAX_DEPT=60;
 const RE_D=/^\d{4}-\d{2}-\d{2}$/, RE_T=/^\d{2}:\d{2}$/;
 const SVG_CHECK='<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="m3.5 8.5 3 3 6-7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const SVG_PENCIL='<svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path d="m13.5 3.5 3 3L7 16H4v-3z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>';
@@ -498,7 +608,7 @@ function norm(id,d){
     note:String(d.note||'').slice(0,1000),
     status:st,
     done:st==='done',
-    rest:Math.min(9999,Math.max(0,parseInt(d.rest,10)||0)),
+    dept:String(d.dept||'').slice(0,40),
     created:Number(d.created)||0
   };
 }
@@ -517,12 +627,12 @@ let sel=today;
 let view={y:parseInt(today.slice(0,4),10),m:parseInt(today.slice(5,7),10)-1};
 let filter='all', tab='day', editing=null;
 const KEY_VIEW='todocal.v1.view';
-let viewMode=lsGet(KEY_VIEW)==='cal'?'cal':'sheet';
+let viewMode=({cal:1,report:1})[lsGet(KEY_VIEW)]?lsGet(KEY_VIEW):'sheet';
 let sheetSort=null;
 
 /* ---------- work-hours settings & calculation ---------- */
 const DEFAULT_S={ws:'09:00',we:'18:00',ls:'12:00',le:'13:00',days:[1,2,3,4,5],hol:false};
-let S={ws:DEFAULT_S.ws,we:DEFAULT_S.we,ls:DEFAULT_S.ls,le:DEFAULT_S.le,days:DEFAULT_S.days.slice(),hol:false};
+let S={ws:DEFAULT_S.ws,we:DEFAULT_S.we,ls:DEFAULT_S.ls,le:DEFAULT_S.le,days:DEFAULT_S.days.slice(),hol:false,depts:[]};
 const toMin=s=>{const p=s.split(':');return (+p[0])*60+(+p[1]);};
 const addDay=s=>{const d=parse(s);d.setDate(d.getDate()+1);return fromDate(d);};
 function settingsError(n){
@@ -535,6 +645,16 @@ function settingsError(n){
   if(!n.days.length) return 'เลือกวันทำงานอย่างน้อย 1 วัน';
   return '';
 }
+function normDepts(a){
+  const out=[], seen={};
+  (Array.isArray(a)?a:[]).forEach(x=>{
+    if(!x||typeof x.id!=='string'||typeof x.name!=='string') return;
+    const id=x.id.slice(0,40), name=x.name.trim().slice(0,40);
+    if(!id||!name||seen[id]) return;
+    seen[id]=1; out.push({id:id,name:name});
+  });
+  return out.slice(0,MAX_DEPT);
+}
 function normSettings(d){
   d=d||{};
   const okT=v=>typeof v==='string'&&RE_T.test(v);
@@ -543,9 +663,10 @@ function normSettings(d){
     ws:okT(d.ws)?d.ws:DEFAULT_S.ws, we:okT(d.we)?d.we:DEFAULT_S.we,
     ls:okL(d.ls)?d.ls:DEFAULT_S.ls, le:okL(d.le)?d.le:DEFAULT_S.le,
     days:Array.isArray(d.days)?d.days.filter(x=>Number.isInteger(x)&&x>=0&&x<=6):DEFAULT_S.days.slice(),
-    hol:!!d.hol
+    hol:!!d.hol,
+    depts:normDepts(d.depts)
   };
-  if(settingsError(n)) return {ws:DEFAULT_S.ws,we:DEFAULT_S.we,ls:DEFAULT_S.ls,le:DEFAULT_S.le,days:DEFAULT_S.days.slice(),hol:false};
+  if(settingsError(n)) return {ws:DEFAULT_S.ws,we:DEFAULT_S.we,ls:DEFAULT_S.ls,le:DEFAULT_S.le,days:DEFAULT_S.days.slice(),hol:false,depts:n.depts};
   return n;
 }
 function segments(){
@@ -585,7 +706,7 @@ function workMinutes(t){
     }
     d=addDay(d); n++;
   }
-  return Math.max(0,total-(parseInt(t.rest,10)||0));
+  return total;
 }
 function fmtDur(min){
   const h=Math.floor(min/60), m=Math.round(min%60);
@@ -612,6 +733,7 @@ function editPreview(t){
 function saveSettings(){
   lsSet(KEY_SET,S);
   if(mode==='cloud'&&coll) enqueue('_settings',()=>coll.doc('_settings').set(S)).catch(fail);
+  else if(mode==='github') ghQueue();
   renderAll();
 }
 function renderSettings(force){
@@ -620,23 +742,414 @@ function renderSettings(force){
   $('#ws-hol').checked=!!S.hol;
   document.querySelectorAll('[data-act="wsday"]').forEach(b=>b.setAttribute('aria-pressed',String(S.days.indexOf(+b.dataset.v)>=0)));
   const span=toMin(S.we)-toMin(S.ws), brk=span-dayMin();
-  $('#wsSum').textContent='เวลางานวันละ '+fmtDur(span)+(brk>0?' · พัก '+fmtDur(brk)+' · ชั่วโมงทำงานสุทธิ '+fmtDur(dayMin()):'')+' (เวลาในช่อง "พัก (นาที)" ของแต่ละงานจะถูกหักเพิ่ม)';
+  $('#wsSum').textContent='เวลางานวันละ '+fmtDur(span)+(brk>0?' · พัก '+fmtDur(brk)+' · ชั่วโมงทำงานสุทธิ '+fmtDur(dayMin()):'');
 }
 function updateAddPreview(){
   $('#add-hrs').textContent=addPreview({date:$('#add-date').value,time:$('#add-time').value,end:$('#add-end').value,endTime:$('#add-endtime').value});
 }
 function updateEditPreview(){
   const f=$('#editForm'), o=$('#ed-hrs'); if(!f||!o) return;
-  o.textContent=editPreview({date:f.elements.date.value,time:f.elements.time.value,end:f.elements.end.value,endTime:f.elements.endTime.value,rest:f.elements.rest.value});
+  o.textContent=editPreview({date:f.elements.date.value,time:f.elements.time.value,end:f.elements.end.value,endTime:f.elements.endTime.value});
 }
 $('#wsPanel').addEventListener('change',()=>{
-  const n={ws:$('#ws-ws').value,we:$('#ws-we').value,ls:$('#ws-ls').value,le:$('#ws-le').value,days:S.days.slice(),hol:$('#ws-hol').checked};
+  const n={ws:$('#ws-ws').value,we:$('#ws-we').value,ls:$('#ws-ls').value,le:$('#ws-le').value,days:S.days.slice(),hol:$('#ws-hol').checked,depts:S.depts};
   const err=settingsError(n);
   if(err){ toast(err); renderSettings(true); return; }
   S=n; saveSettings();
 });
 $('#addForm').addEventListener('input',updateAddPreview);
 $('#panel').addEventListener('input',e=>{ if(e.target.closest&&e.target.closest('#editForm')) updateEditPreview(); });
+/* ---------- MASTER: department list ---------- */
+const deptName=id=>{ const d=S.depts.find(x=>x.id===id); return d?d.name:''; };
+const deptVal=id=>S.depts.some(d=>d.id===id)?id:'';
+const deptIdByName=n=>{ const l=String(n).trim().toLowerCase(); const d=S.depts.find(x=>x.name.toLowerCase()===l); return d?d.id:null; };
+const deptSig=()=>S.depts.map(d=>d.id+'\u0001'+d.name).join('\u0002');
+function deptOpts(v){
+  return '<option value="">— ไม่ระบุ —</option>'+S.depts.map(d=>'<option value="'+esc(d.id)+'"'+(d.id===v?' selected':'')+'>'+esc(d.name)+'</option>').join('');
+}
+/* rebuild a department <select> only when the master list changed */
+function syncDept(el,v){
+  if(!el) return;
+  const sig=deptSig();
+  if(el.dataset.sig===sig) return;
+  const cur=(v===undefined)?el.value:v;
+  el.innerHTML=deptOpts(cur);
+  el.value=deptVal(cur);
+  el.dataset.sig=sig;
+}
+function renderDeptSelects(){ syncDept($('#add-dept')); }
+function deptCounts(){ const c={}; tasks.forEach(t=>{ if(t.dept) c[t.dept]=(c[t.dept]||0)+1; }); return c; }
+function deptNameError(name,exceptId){
+  if(!name) return 'ใส่ชื่อแผนกก่อน';
+  const low=name.toLowerCase();
+  if(S.depts.some(d=>d.id!==exceptId&&d.name.toLowerCase()===low)) return 'มีแผนก "'+name+'" อยู่แล้ว';
+  return '';
+}
+let mdSig=null;
+function renderMaster(force){
+  const list=$('#mdList'); if(!list) return;
+  const sig=deptSig();
+  if(force||sig!==mdSig){
+    const ae=document.activeElement;
+    const fid=(ae&&list.contains(ae)&&ae.tagName==='INPUT')?ae.dataset.did:null;
+    mdSig=sig;
+    list.innerHTML=S.depts.length?S.depts.map(d=>
+      '<li class="md-item" data-did="'+esc(d.id)+'">'+
+        '<input class="field" data-did="'+esc(d.id)+'" data-k="name" maxlength="40" value="'+esc(d.name)+'" aria-label="ชื่อแผนก (แก้ไขได้)">'+
+        '<span class="md-cnt" data-cnt></span>'+
+        '<button type="button" class="btn danger small" data-act="mdel" data-did="'+esc(d.id)+'" aria-label="ลบแผนก '+esc(d.name)+'">ลบ</button>'+
+      '</li>').join(''):'<li class="md-empty">ยังไม่มีแผนก พิมพ์ชื่อแผนกด้านบนแล้วกด Enter เพื่อเพิ่ม</li>';
+    if(fid){ const nx=list.querySelector('input[data-did="'+fid+'"]'); if(nx) nx.focus(); }
+  }
+  const cnt=deptCounts();
+  list.querySelectorAll('.md-item').forEach(li=>{
+    const n=cnt[li.dataset.did]||0;
+    li.querySelector('[data-cnt]').textContent=n?'ใช้ '+n+' งาน':'ยังไม่ถูกใช้';
+  });
+}
+$('#mdForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const inp=$('#md-name'), name=inp.value.trim().slice(0,40);
+  if(S.depts.length>=MAX_DEPT){ toast('เพิ่มแผนกได้สูงสุด '+MAX_DEPT+' แผนก'); return; }
+  const err=deptNameError(name,'');
+  if(err){ toast(err); inp.focus(); return; }
+  S=Object.assign({},S,{depts:S.depts.concat([{id:'dp'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),name:name}])});
+  inp.value='';
+  saveSettings();
+  inp.focus();
+});
+$('#mdList').addEventListener('change',e=>{
+  const el=e.target; if(!el.dataset||el.dataset.k!=='name') return;
+  const d=S.depts.find(x=>x.id===el.dataset.did); if(!d) return;
+  const name=el.value.trim().slice(0,40);
+  if(name===d.name){ el.value=name; return; }
+  const err=deptNameError(name,d.id);
+  if(err){ toast(err); el.value=d.name; return; }
+  S=Object.assign({},S,{depts:S.depts.map(x=>x.id===d.id?{id:x.id,name:name}:x)});
+  saveSettings();
+  toast('เปลี่ยนชื่อแผนกแล้ว');
+});
+$('#mdList').addEventListener('keydown',e=>{
+  if(e.key!=='Escape'||!e.target.dataset||e.target.dataset.k!=='name') return;
+  const d=S.depts.find(x=>x.id===e.target.dataset.did); if(d) e.target.value=d.name;
+  e.target.blur();
+});
+
+/* ---------- Excel: export / import / template (self-contained .xlsx reader + writer) ---------- */
+const XL_MIME='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+const MAX_IMPORT=2000;
+const XL_HEAD=['ชื่องาน','วันเริ่ม','เวลาเริ่ม','วันสิ้นสุด','เวลาสิ้นสุด','แผนก','ความสำคัญ','สถานะ','หมายเหตุ / วิธีแก้ไข','ชั่วโมงทำงาน (ระบบคำนวณให้ ไม่ต้องกรอก)','รหัส (ห้ามแก้ · เว้นว่างถ้าเป็นงานใหม่)'];
+const XL_COLS=[['title','ชื่องาน'],['date','วันเริ่ม'],['time','เวลาเริ่ม'],['end','วันสิ้นสุด'],['endTime','เวลาสิ้นสุด'],['dept','แผนก'],['pri','ความสำคัญ'],['status','สถานะ'],['note','หมายเหตุ'],['id','รหัส']];
+const PRI_TH={high:'สูง',mid:'กลาง',low:'ต่ำ'};
+const XL_HOWTO=[
+  'วิธีใช้ Template',
+  'กรอกงานที่แผ่น "งาน" แถวละ 1 งาน เริ่มที่แถวที่ 2 (อย่าเปลี่ยนชื่อหัวคอลัมน์)',
+  'ชื่องาน: จำเป็นต้องมี',
+  'วันเริ่ม / วันสิ้นสุด: พิมพ์แบบ 05/11/2569 (พ.ศ.) หรือ 5/11 (ปีปัจจุบัน) · ถ้าเว้นวันสิ้นสุดไว้ จะเป็นงานวันเดียว',
+  'เวลาเริ่ม / เวลาสิ้นสุด: พิมพ์แบบ 09:30 หรือเว้นว่างไว้',
+  'แผนก: เลือกจากรายการ (รายการมาจากแผ่น "แผนก") ถ้าพิมพ์ชื่อใหม่ ระบบจะถามว่าจะเพิ่มเข้า MASTER ไหมตอนนำเข้า',
+  'ความสำคัญ: สูง / กลาง / ต่ำ (ว่าง = กลาง)',
+  'สถานะ: ยังไม่เริ่ม / กำลังทำ / ติดปัญหา / เสร็จแล้ว (ว่าง = ยังไม่เริ่ม)',
+  'ชั่วโมงทำงาน: ระบบคำนวณให้ ไม่ต้องกรอก และจะไม่ถูกนำเข้า',
+  'รหัส: เว้นว่างถ้าเป็นงานใหม่ · ถ้าแก้ไฟล์ที่ส่งออกจากระบบ ให้คงรหัสเดิมไว้ เพื่อให้นำเข้าแล้วอัปเดตงานเดิมแทนการเพิ่มซ้ำ',
+  'นำเข้า: เปิดเมนู Excel ในแอป > นำเข้าจากไฟล์ > เลือกไฟล์นี้ แล้วตรวจสรุปก่อนกดยืนยัน'
+];
+let xlPending=null;
+const newDeptId=()=>'dp'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+
+/* --- zip writer (stored, no compression) --- */
+const CRC_T=(function(){ const t=new Uint32Array(256); for(let n=0;n<256;n++){ let c=n; for(let k=0;k<8;k++) c=(c&1)?(0xEDB88320^(c>>>1)):(c>>>1); t[n]=c>>>0; } return t; })();
+function crc32(b){ let c=0xFFFFFFFF; for(let i=0;i<b.length;i++) c=CRC_T[(c^b[i])&255]^(c>>>8); return (c^0xFFFFFFFF)>>>0; }
+function zipStore(files){
+  const enc=new TextEncoder(), parts=[], cen=[]; let off=0;
+  const u16=n=>[n&255,(n>>>8)&255], u32=n=>[n&255,(n>>>8)&255,(n>>>16)&255,(n>>>24)&255];
+  files.forEach(f=>{
+    const nm=enc.encode(f.name), d=enc.encode(f.data), crc=crc32(d);
+    const common=[].concat(u16(20),u16(0x0800),u16(0),u16(0),u16(33),u32(crc),u32(d.length),u32(d.length),u16(nm.length),u16(0));
+    const lh=new Uint8Array([0x50,0x4b,3,4].concat(common)); 
+    parts.push(lh,nm,d);
+    /* central header: made-by, needed, flags, method, time, date, crc, sizes, name len, extra len, comment len, disk, int attr, ext attr, offset */
+    const c=[0x50,0x4b,1,2].concat(u16(20),u16(20),u16(0x0800),u16(0),u16(0),u16(33),u32(crc),u32(d.length),u32(d.length),u16(nm.length),u16(0),u16(0),u16(0),u16(0),u32(0),u32(off));
+    cen.push(new Uint8Array(c),nm);
+    off+=lh.length+nm.length+d.length;
+  });
+  let cs=0; cen.forEach(x=>{ cs+=x.length; });
+  const end=new Uint8Array([0x50,0x4b,5,6,0,0,0,0].concat(u16(files.length),u16(files.length),u32(cs),u32(off),u16(0)));
+  const all=parts.concat(cen,[end]); let tot=0; all.forEach(x=>{ tot+=x.length; });
+  const out=new Uint8Array(tot); let p=0; all.forEach(x=>{ out.set(x,p); p+=x.length; });
+  return out;
+}
+
+/* --- xlsx writer --- */
+const xe=v=>String(v).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g,'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const colL=i=>String.fromCharCode(65+i);
+function xc(r,c,v,st){
+  if(v===''||v==null) return '';
+  const ref=colL(c)+r;
+  if(typeof v==='number') return '<c r="'+ref+'" s="'+st+'"><v>'+v+'</v></c>';
+  return '<c r="'+ref+'" s="'+st+'" t="inlineStr"><is><t xml:space="preserve">'+xe(v)+'</t></is></c>';
+}
+function xlsxBuild(taskRows){
+  const NS='xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"';
+  const HEAD='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n';
+  const widths=[36,13,11,13,11,20,12,13,42,22,22];
+  const cols='<cols>'+widths.map((w,i)=>'<col min="'+(i+1)+'" max="'+(i+1)+'" width="'+w+'" style="'+(i===9?3:2)+'" customWidth="1"/>').join('')+'</cols>';
+  let sd='<row r="1" ht="48" customHeight="1">'+XL_HEAD.map((h,i)=>xc(1,i,h,1)).join('')+'</row>';
+  taskRows.forEach((r,ri)=>{ sd+='<row r="'+(ri+2)+'">'+r.map((v,ci)=>xc(ri+2,ci,v,ci===9?3:2)).join('')+'</row>'; });
+  const dv=
+    '<dataValidations count="3">'+
+    '<dataValidation type="list" errorStyle="warning" allowBlank="1" showErrorMessage="1" errorTitle="แผนก" error="ไม่มีแผนกนี้ในรายการ ถ้าใช้ชื่อใหม่ ระบบจะถามให้เพิ่มเข้า MASTER ตอนนำเข้า" sqref="F2:F2000"><formula1>\'แผนก\'!$A$2:$A$'+(MAX_DEPT+1)+'</formula1></dataValidation>'+
+    '<dataValidation type="list" allowBlank="1" showErrorMessage="1" errorTitle="ความสำคัญ" error="เลือก สูง / กลาง / ต่ำ" sqref="G2:G2000"><formula1>"สูง,กลาง,ต่ำ"</formula1></dataValidation>'+
+    '<dataValidation type="list" allowBlank="1" showErrorMessage="1" errorTitle="สถานะ" error="เลือกจากรายการ" sqref="H2:H2000"><formula1>"ยังไม่เริ่ม,กำลังทำ,ติดปัญหา,เสร็จแล้ว"</formula1></dataValidation>'+
+    '</dataValidations>';
+  const sheet1=HEAD+'<worksheet '+NS+'><sheetViews><sheetView workbookViewId="0" tabSelected="1"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/><selection pane="bottomLeft" activeCell="A2" sqref="A2"/></sheetView></sheetViews><sheetFormatPr defaultRowHeight="15"/>'+cols+'<sheetData>'+sd+'</sheetData>'+dv+'</worksheet>';
+  let dd='<row r="1">'+xc(1,0,'แผนก',1)+'</row>';
+  S.depts.forEach((d,i)=>{ dd+='<row r="'+(i+2)+'">'+xc(i+2,0,d.name,2)+'</row>'; });
+  const sheet2=HEAD+'<worksheet '+NS+'><sheetFormatPr defaultRowHeight="15"/><cols><col min="1" max="1" width="34" style="2" customWidth="1"/></cols><sheetData>'+dd+'</sheetData></worksheet>';
+  const hw=XL_HOWTO.map((t,i)=>'<row r="'+(i+1)+'">'+xc(i+1,0,t,i===0?1:0)+'</row>').join('');
+  const sheet3=HEAD+'<worksheet '+NS+'><sheetFormatPr defaultRowHeight="18"/><cols><col min="1" max="1" width="120" customWidth="1"/></cols><sheetData>'+hw+'</sheetData></worksheet>';
+  const styles=HEAD+'<styleSheet '+NS+'><fonts count="2"><font><sz val="11"/><name val="Tahoma"/></font><font><b/><sz val="11"/><color rgb="FFFFFFFF"/><name val="Tahoma"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF2547D0"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="4"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment vertical="center" wrapText="1"/></xf><xf numFmtId="49" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/><xf numFmtId="2" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>';
+  const RNS='http://schemas.openxmlformats.org/officeDocument/2006/relationships';
+  const wb=HEAD+'<workbook '+NS+' xmlns:r="'+RNS+'"><sheets><sheet name="งาน" sheetId="1" r:id="rId1"/><sheet name="แผนก" sheetId="2" r:id="rId2"/><sheet name="วิธีใช้" sheetId="3" r:id="rId3"/></sheets></workbook>';
+  const PR='http://schemas.openxmlformats.org/package/2006/relationships';
+  const wbRels=HEAD+'<Relationships xmlns="'+PR+'"><Relationship Id="rId1" Type="'+RNS+'/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="'+RNS+'/worksheet" Target="worksheets/sheet2.xml"/><Relationship Id="rId3" Type="'+RNS+'/worksheet" Target="worksheets/sheet3.xml"/><Relationship Id="rId4" Type="'+RNS+'/styles" Target="styles.xml"/></Relationships>';
+  const rels=HEAD+'<Relationships xmlns="'+PR+'"><Relationship Id="rId1" Type="'+RNS+'/officeDocument" Target="xl/workbook.xml"/></Relationships>';
+  const SM='application/vnd.openxmlformats-officedocument.spreadsheetml';
+  const ct=HEAD+'<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="'+SM+'.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="'+SM+'.worksheet+xml"/><Override PartName="/xl/worksheets/sheet2.xml" ContentType="'+SM+'.worksheet+xml"/><Override PartName="/xl/worksheets/sheet3.xml" ContentType="'+SM+'.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="'+SM+'.styles+xml"/></Types>';
+  return new Blob([zipStore([
+    {name:'[Content_Types].xml',data:ct},{name:'_rels/.rels',data:rels},{name:'xl/workbook.xml',data:wb},
+    {name:'xl/_rels/workbook.xml.rels',data:wbRels},{name:'xl/styles.xml',data:styles},
+    {name:'xl/worksheets/sheet1.xml',data:sheet1},{name:'xl/worksheets/sheet2.xml',data:sheet2},{name:'xl/worksheets/sheet3.xml',data:sheet3}
+  ])],{type:XL_MIME});
+}
+function xlDownload(name,blob){
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+}
+function xlExport(){
+  if(!tasks.length){ toast('ยังไม่มีงานให้ส่งออก (ลองดาวน์โหลด Template แทน)'); return; }
+  const list=tasks.slice().sort((a,b)=>a.created-b.created||(a.id<b.id?-1:1));
+  const rows=list.map(t=>{ const wm=workMinutes(t); return [t.title,fmtCellDate(t.date),t.time,fmtCellDate(t.end),t.endTime,deptName(t.dept),PRI_TH[t.pri],ST_LABEL[t.status],t.note,wm===null?'':Math.round(wm/60*100)/100,t.id]; });
+  xlDownload('todo-tasks-'+today+'.xlsx',xlsxBuild(rows));
+  toast('ส่งออก '+rows.length+' งานแล้ว');
+}
+function xlTemplate(){ xlDownload('todo-template.xlsx',xlsxBuild([])); toast('ดาวน์โหลด Template แล้ว'); }
+
+/* --- xlsx reader --- */
+async function inflateRaw(u8){
+  const ds=new DecompressionStream('deflate-raw'), w=ds.writable.getWriter();
+  w.write(u8); w.close();
+  return new Uint8Array(await new Response(ds.readable).arrayBuffer());
+}
+function unzipIndex(buf){
+  const u8=new Uint8Array(buf), dv=new DataView(buf);
+  let e=-1;
+  for(let i=u8.length-22;i>=Math.max(0,u8.length-65557);i--){ if(dv.getUint32(i,true)===0x06054b50){ e=i; break; } }
+  if(e<0) throw new Error('not a zip');
+  const n=dv.getUint16(e+10,true); let p=dv.getUint32(e+16,true);
+  const dec=new TextDecoder(), ent={};
+  for(let i=0;i<n;i++){
+    if(dv.getUint32(p,true)!==0x02014b50) throw new Error('bad zip');
+    const nl=dv.getUint16(p+28,true), el=dv.getUint16(p+30,true), cl=dv.getUint16(p+32,true);
+    ent[dec.decode(u8.subarray(p+46,p+46+nl))]={method:dv.getUint16(p+10,true),csz:dv.getUint32(p+20,true),lho:dv.getUint32(p+42,true)};
+    p+=46+nl+el+cl;
+  }
+  return {u8:u8,dv:dv,ent:ent};
+}
+async function zipText(z,name){
+  const f=z.ent[name]; if(!f) return null;
+  const start=f.lho+30+z.dv.getUint16(f.lho+26,true)+z.dv.getUint16(f.lho+28,true);
+  const raw=z.u8.subarray(start,start+f.csz);
+  return new TextDecoder().decode(f.method===0?raw:await inflateRaw(raw));
+}
+function xmlDoc(t){
+  const d=new DOMParser().parseFromString(t,'application/xml');
+  if(d.getElementsByTagName('parsererror').length) throw new Error('bad xml');
+  return d;
+}
+const tText=el=>Array.from(el.getElementsByTagName('t')).filter(x=>x.parentNode.nodeName!=='rPh').map(x=>x.textContent).join('');
+const colIdx=ref=>{ const m=/^([A-Z]+)/.exec(ref||''); if(!m) return -1; let n=0; for(const ch of m[1]) n=n*26+ch.charCodeAt(0)-64; return n-1; };
+function sheetRows(doc,shared){
+  const rows=[];
+  Array.from(doc.getElementsByTagName('row')).forEach((row,ri)=>{
+    const rn=(parseInt(row.getAttribute('r'),10)||ri+1)-1, arr=[];
+    Array.from(row.getElementsByTagName('c')).forEach((c,ci)=>{
+      let k=colIdx(c.getAttribute('r')); if(k<0) k=ci;
+      const t=c.getAttribute('t'), vEl=c.getElementsByTagName('v')[0], v=vEl?vEl.textContent:'';
+      let val='';
+      if(t==='s') val=shared[+v]!==undefined?shared[+v]:'';
+      else if(t==='inlineStr'){ const is=c.getElementsByTagName('is')[0]; val=is?tText(is):''; }
+      else if(t==='str'||t==='d') val=v;
+      else if(t==='b') val=v==='1'?'TRUE':'FALSE';
+      else if(t==='e') val='';
+      else val=(v===''?'':(isFinite(parseFloat(v))?parseFloat(v):v));
+      arr[k]=val;
+    });
+    rows[rn]=arr;
+  });
+  for(let i=0;i<rows.length;i++) if(!rows[i]) rows[i]=[];
+  return rows;
+}
+const xlNorm=c=>String(c==null?'':c).replace(/\s+/g,'').toLowerCase();
+const hasHeader=rows=>rows.slice(0,10).some(r=>(r||[]).some(c=>xlNorm(c).indexOf('ชื่องาน')===0));
+async function readXlsx(buf){
+  const z=unzipIndex(buf);
+  const ssT=await zipText(z,'xl/sharedStrings.xml');
+  const shared=ssT?Array.from(xmlDoc(ssT).getElementsByTagName('si')).map(tText):[];
+  const wbDoc=xmlDoc(await zipText(z,'xl/workbook.xml'));
+  const relDoc=xmlDoc(await zipText(z,'xl/_rels/workbook.xml.rels'));
+  const rel={}; Array.from(relDoc.getElementsByTagName('Relationship')).forEach(r=>{ rel[r.getAttribute('Id')]=r.getAttribute('Target'); });
+  let first=null;
+  for(const sh of Array.from(wbDoc.getElementsByTagName('sheet'))){
+    let tg=rel[sh.getAttribute('r:id')]; if(!tg) continue;
+    tg=tg.charAt(0)==='/'?tg.slice(1):'xl/'+tg;
+    const tx=await zipText(z,tg); if(!tx) continue;
+    const rows=sheetRows(xmlDoc(tx),shared);
+    if(!first) first=rows;
+    if(hasHeader(rows)) return rows;
+  }
+  return first||[];
+}
+function parseCsv(t){
+  t=t.replace(/^\uFEFF/,'');
+  const l1=t.split(/\r?\n/,1)[0], cnt=ch=>l1.split(ch).length;
+  const sep=cnt('\t')>cnt(',')?'\t':(cnt(';')>cnt(',')?';':',');
+  const rows=[]; let row=[], cur='', q=false;
+  for(let i=0;i<t.length;i++){
+    const ch=t[i];
+    if(q){ if(ch==='"'){ if(t[i+1]==='"'){ cur+='"'; i++; } else q=false; } else cur+=ch; }
+    else if(ch==='"') q=true;
+    else if(ch===sep){ row.push(cur); cur=''; }
+    else if(ch==='\n'||ch==='\r'){ if(ch==='\r'&&t[i+1]==='\n') i++; row.push(cur); rows.push(row); row=[]; cur=''; }
+    else cur+=ch;
+  }
+  if(cur!==''||row.length){ row.push(cur); rows.push(row); }
+  return rows;
+}
+
+/* --- cell converters (Excel may hand us real dates / times as numbers) --- */
+function xlDate(v){
+  if(v===''||v==null) return '';
+  if(typeof v==='number'){
+    if(!(v>=1)) return null;
+    const d=new Date(Math.round((v-25569)*86400000));
+    let y=d.getUTCFullYear(); if(y>2400) y-=543;
+    return fromDate(new Date(y,d.getUTCMonth(),d.getUTCDate()));
+  }
+  let s=String(v).trim();
+  if(/^\d{4}-\d{2}-\d{2}T/.test(s)) s=s.slice(0,10);
+  return parseCellDate(s);
+}
+function xlTime(v){
+  if(v===''||v==null) return '';
+  if(typeof v==='number'){
+    if(!(v>=0)) return null;
+    const m=Math.round((v-Math.floor(v))*1440)%1440;
+    return pad(Math.floor(m/60))+':'+pad(m%60);
+  }
+  return parseCellTime(v);
+}
+
+/* --- analyse rows -> preview --- */
+function xlAnalyze(rows){
+  let hi=-1;
+  for(let i=0;i<Math.min(rows.length,10);i++){ if((rows[i]||[]).some(c=>xlNorm(c).indexOf('ชื่องาน')===0)){ hi=i; break; } }
+  if(hi<0) return {fatal:'ไม่พบหัวคอลัมน์ "ชื่องาน" ในไฟล์ ลองใช้ไฟล์จาก Template หรือไฟล์ที่ส่งออกจากระบบนี้'};
+  const idx={};
+  rows[hi].forEach((c,ci)=>{
+    const h=xlNorm(c); if(!h) return;
+    const col=XL_COLS.find(x=>h.indexOf(x[1])===0);
+    if(col&&idx[col[0]]===undefined) idx[col[0]]=ci;
+  });
+  const get=(r,k)=>{ const v=idx[k]===undefined?'':r[idx[k]]; return v==null?'':v; };
+  const str=v=>String(v).trim();
+  const existing=new Map(tasks.map(t=>[t.id,t]));
+  const known=new Map(S.depts.map(d=>[d.name.toLowerCase(),d.id]));
+  const res={rows:[],errors:[],newDepts:[],total:0,add:0,upd:0};
+  const seenNew=new Set(), seenIds=new Set();
+  const now=Date.now();
+  for(let i=hi+1;i<rows.length;i++){
+    const r=rows[i]||[];
+    if(!r.some(c=>c!==''&&c!=null&&String(c).trim()!=='')) continue;
+    if(res.total>=MAX_IMPORT){ res.errors.push('อ่านได้สูงสุด '+MAX_IMPORT+' แถวต่อครั้ง แถวที่เหลือไม่ถูกนำเข้า'); break; }
+    res.total++;
+    const errs=[], line=i+1;
+    const title=str(get(r,'title')).slice(0,200);
+    if(!title) errs.push('ไม่มีชื่องาน');
+    const date=xlDate(get(r,'date')), time=xlTime(get(r,'time')), end=xlDate(get(r,'end')), endTime=xlTime(get(r,'endTime'));
+    if(date===null) errs.push('วันเริ่มไม่ถูกต้อง');
+    if(time===null) errs.push('เวลาเริ่มไม่ถูกต้อง');
+    if(end===null) errs.push('วันสิ้นสุดไม่ถูกต้อง');
+    if(endTime===null) errs.push('เวลาสิ้นสุดไม่ถูกต้อง');
+    let pri='mid'; const pc=str(get(r,'pri'));
+    if(pc!==''){ pri=parsePri(pc); if(pri===null) errs.push('ความสำคัญไม่ถูกต้อง ("'+pc.slice(0,20)+'")'); }
+    let st='todo'; const sc=str(get(r,'status'));
+    if(sc!==''){ st=parseStatus(sc); if(st===null) errs.push('สถานะไม่ถูกต้อง ("'+sc.slice(0,20)+'")'); }
+    const dn=str(get(r,'dept')).slice(0,40);
+    let dept='', deptName2='';
+    if(dn){ const k=dn.toLowerCase(); if(known.has(k)) dept=known.get(k); else{ deptName2=dn; } }
+    const idv=str(get(r,'id'));
+    const base=idv&&existing.has(idv)?existing.get(idv):null;
+    if(base&&seenIds.has(base.id)) errs.push('รหัสซ้ำกับแถวก่อนหน้า');
+    const t={id:base?base.id:newId(),title:title,date:date||'',time:time||'',end:end||'',endTime:endTime||'',pri:pri,note:str(get(r,'note')).slice(0,1000),status:st,done:st==='done',dept:dept,created:base?base.created:now+res.rows.length};
+    if(!errs.length){ const re=rangeError(t); if(re) errs.push(re); }
+    if(errs.length){ res.errors.push('แถว '+line+': '+errs.join(', ')); continue; }
+    if(base) seenIds.add(base.id);
+    if(deptName2&&!seenNew.has(deptName2.toLowerCase())){ seenNew.add(deptName2.toLowerCase()); res.newDepts.push(deptName2); }
+    res.rows.push({t:t,deptName:deptName2});
+    if(base) res.upd++; else res.add++;
+  }
+  return res;
+}
+function renderXlPrev(){
+  const el=$('#xlPrev'), P=xlPending;
+  if(!P){ el.hidden=true; el.innerHTML=''; return; }
+  const skipped=P.errors.filter(x=>x.indexOf('แถว ')===0).length;
+  let h='<b>'+esc(P.fname)+'</b><br>พบ '+P.total+' แถว · นำเข้าได้ <b>'+P.rows.length+'</b> งาน'+
+        (P.rows.length?' (เพิ่มใหม่ '+P.add+' · อัปเดตงานเดิม '+P.upd+')':'')+(skipped?' · <span class="bad">ข้าม '+skipped+' แถว</span>':'');
+  if(P.errors.length){
+    h+='<ul class="bad">'+P.errors.slice(0,8).map(x=>'<li>'+esc(x)+'</li>').join('')+(P.errors.length>8?'<li>…และอีก '+(P.errors.length-8)+' รายการ</li>':'')+'</ul>';
+  }
+  if(P.newDepts.length){
+    const room=MAX_DEPT-S.depts.length, can=room>=P.newDepts.length;
+    h+='<label><input type="checkbox" id="xl-adddept"'+(can?' checked':' disabled')+'><span>เพิ่มแผนกใหม่เข้า MASTER ด้วย: <b>'+P.newDepts.map(esc).join(', ')+'</b>'+(can?'<br>ถ้าไม่เลือก งานของแผนกเหล่านี้จะนำเข้าโดยไม่มีแผนก':'<br>เพิ่มไม่ได้ เพราะเกินจำนวนแผนกสูงสุด '+MAX_DEPT+' แผนก (งานเหล่านี้จะนำเข้าโดยไม่มีแผนก)')+'</span></label>';
+  }
+  h+='<div class="xl-act">'+(P.rows.length?'<button type="button" class="btn primary" data-act="xl-do">นำเข้า '+P.rows.length+' งาน</button>':'')+'<button type="button" class="btn" data-act="xl-cancel">'+(P.rows.length?'ยกเลิก':'ปิด')+'</button></div>';
+  el.innerHTML=h; el.hidden=false;
+}
+async function xlHandleFile(file){
+  if(!file) return;
+  const nm=file.name||'ไฟล์';
+  try{
+    let rows;
+    if(/\.csv$/i.test(nm)) rows=parseCsv(await file.text());
+    else if(/\.xls$/i.test(nm)){ toast('ไม่รองรับไฟล์ .xls เก่า ให้ Save As เป็น .xlsx ก่อน'); return; }
+    else rows=await readXlsx(await file.arrayBuffer());
+    const a=xlAnalyze(rows);
+    if(a.fatal){ xlPending=null; renderXlPrev(); toast(a.fatal); return; }
+    a.fname=nm; xlPending=a; renderXlPrev();
+  }catch(e){ xlPending=null; renderXlPrev(); toast('อ่านไฟล์ไม่สำเร็จ ใช้ไฟล์ .xlsx (หรือ .csv) ที่ไม่ได้ตั้งรหัสผ่าน'); }
+}
+function xlCommit(){
+  const P=xlPending; if(!P||!P.rows.length) return;
+  const cb=$('#xl-adddept'), addDepts=!!(cb&&cb.checked&&!cb.disabled);
+  const byName=new Map(S.depts.map(d=>[d.name.toLowerCase(),d.id]));
+  let addedN=0;
+  if(addDepts&&P.newDepts.length){
+    const nd=S.depts.slice();
+    P.newDepts.forEach(n=>{ if(nd.length<MAX_DEPT){ const id=newDeptId(); nd.push({id:id,name:n}); byName.set(n.toLowerCase(),id); addedN++; } });
+    S=Object.assign({},S,{depts:nd}); saveSettings();
+  }
+  const ops=P.rows.map(r=>{ const t=r.t; if(r.deptName) t.dept=addDepts?(byName.get(r.deptName.toLowerCase())||''):''; return t; });
+  dismissExamples();
+  xlPending=null; renderXlPrev();
+  Promise.all(ops.map(t=>save(t)))
+    .then(()=>toast('นำเข้า '+ops.length+' งานแล้ว'+(addedN?' · เพิ่ม '+addedN+' แผนก':'')))
+    .catch(fail);
+}
+$('#xlFile').addEventListener('change',e=>{ const f=e.target.files&&e.target.files[0]; e.target.value=''; xlHandleFile(f); });
+
 let tasks=[], examples=[], showExamples=false;
 let mode='boot';          // boot | cloud | local
 let status='connecting';  // connecting | cloud | local | slow | revoked
@@ -651,7 +1164,7 @@ const pass=t=>filter==='all'||(filter==='open'?!t.done:t.done);
 function makeExamples(){
   const n=new Date();
   const off=k=>fromDate(new Date(n.getFullYear(),n.getMonth(),n.getDate()+k));
-  const mk=(i,title,k,time,pri,done,note)=>({id:'ex'+i,title:title,date:k===null?'':off(k),time:time||'',end:'',endTime:'',pri:pri,note:note||'',done:!!done,status:done?'done':'todo',rest:0,created:i,example:true});
+  const mk=(i,title,k,time,pri,done,note)=>({id:'ex'+i,title:title,date:k===null?'':off(k),time:time||'',end:'',endTime:'',pri:pri,note:note||'',done:!!done,status:done?'done':'todo',dept:'',created:i,example:true});
   return [
     mk(1,'สรุปงานที่ต้องส่งสัปดาห์หน้า',0,'09:30','high',false,'รวบรวมจากบันทึกการประชุม'),
     mk(2,'ซื้อของเข้าบ้าน',0,'17:00','low'),
@@ -683,13 +1196,13 @@ function enqueue(id,fn){
 async function save(t){
   await ready;
   if(mode==='cloud'&&coll){
-    const body={title:t.title,date:t.date,time:t.time,end:t.end||'',endTime:t.endTime||'',pri:t.pri,note:t.note,done:t.done,status:t.status,rest:t.rest||0,created:t.created};
+    const body={title:t.title,date:t.date,time:t.time,end:t.end||'',endTime:t.endTime||'',pri:t.pri,note:t.note,done:t.done,status:t.status,dept:t.dept||'',created:t.created};
     await enqueue(t.id,()=>coll.doc(t.id).set(body));
   }else{
     const i=tasks.findIndex(x=>x.id===t.id);
     const clean=norm(t.id,t);
     if(i<0) tasks.push(clean); else tasks[i]=clean;
-    lsSet(KEY_LOCAL,tasks);
+    lsSet(KEY_LOCAL,tasks); if(mode==='github'){ lsSet(KEY_CACHE,tasks); ghQueue(); }
     renderAll();
   }
 }
@@ -699,10 +1212,140 @@ async function remove(id){
     await enqueue(id,()=>coll.doc(id).delete());
   }else{
     tasks=tasks.filter(x=>x.id!==id);
-    lsSet(KEY_LOCAL,tasks);
+    lsSet(KEY_LOCAL,tasks); if(mode==='github'){ lsSet(KEY_CACHE,tasks); ghQueue(); }
     renderAll();
   }
 }
+/* ---------- report view ---------- */
+let repPeriod='all', repDept='*';
+const ST_COL={todo:'--lo',doing:'--accent',blocked:'--hi',done:'--d3'};
+const mLabel=k=>TH_MONTHS[+k.slice(5,7)-1]+' '+(+k.slice(0,4)+543);
+const dKey=t=>deptName(t.dept)?t.dept:'';
+const pc=(a,b)=>b?Math.round(a*100/b)+'%':'—';
+const hh=m=>m?fmtDur(m):'—';
+function agg(a){
+  const r={n:a.length,todo:0,doing:0,blocked:0,done:0,late:0,min:0,high:0,mid:0,low:0};
+  a.forEach(t=>{ r[t.status]++; r[t.pri]++; if(isLate(t)) r.late++; r.min+=workMinutes(t)||0; });
+  return r;
+}
+function stackBar(r,max){
+  return '<div class="rb">'+ST.map(k=>r[k]?'<i style="width:'+(r[k]*100/max)+'%;background:var('+ST_COL[k]+')" title="'+ST_LABEL[k]+' '+r[k]+'"></i>':'').join('')+'</div>';
+}
+function renderReport(){
+  const all=src();
+  const months=[...new Set(all.filter(t=>t.date).map(t=>t.date.slice(0,7)))].sort().reverse();
+  if(repPeriod!=='all'&&months.indexOf(repPeriod)<0) repPeriod='all';
+  if(repDept!=='*'&&repDept!=='-'&&!S.depts.some(d=>d.id===repDept)) repDept='*';
+  $('#repPeriod').innerHTML='<option value="all">ทั้งหมด (ทุกเดือน)</option>'+months.map(k=>'<option value="'+k+'">'+esc(mLabel(k))+'</option>').join('');
+  $('#repPeriod').value=repPeriod;
+  $('#repDept').innerHTML='<option value="*">ทุกแผนก</option>'+S.depts.map(d=>'<option value="'+esc(d.id)+'">'+esc(d.name)+'</option>').join('')+(all.some(t=>!dKey(t))?'<option value="-">ไม่ระบุแผนก</option>':'');
+  $('#repDept').value=repDept;
+  const list=all.filter(t=>(repPeriod==='all'||(t.date&&t.date.slice(0,7)===repPeriod))&&(repDept==='*'||(repDept==='-'?!dKey(t):t.dept===repDept)));
+  const body=$('#repBody');
+  if(!list.length){ body.innerHTML='<p class="rep-empty">ไม่มีงานในช่วงที่เลือก</p>'; return; }
+  const A=agg(list), groups={};
+  list.forEach(t=>{ const k=dKey(t); (groups[k]=groups[k]||[]).push(t); });
+  const rows=Object.keys(groups).map(k=>({name:k?deptName(k):'ไม่ระบุแผนก',r:agg(groups[k])})).sort((a,b)=>b.r.n-a.r.n);
+  const max=Math.max.apply(null,rows.map(x=>x.r.n)), maxH=Math.max.apply(null,rows.map(x=>x.r.min))||1;
+  const pl=repPeriod==='all'?'ทุกเดือน':mLabel(repPeriod), dl=repDept==='*'?'ทุกแผนก':(repDept==='-'?'ไม่ระบุแผนก':deptName(repDept));
+  const sum='ช่วง '+esc(pl)+' ('+esc(dl)+') มีงานทั้งหมด <b>'+A.n+'</b> งาน เสร็จแล้ว <b>'+A.done+'</b> ('+pc(A.done,A.n)+') กำลังทำ '+A.doing+' ติดปัญหา '+A.blocked+' ยังไม่เริ่ม '+A.todo+
+    (A.late?' เลยกำหนด <b class="bad">'+A.late+'</b> งาน':'')+(A.min?' ชั่วโมงทำงานรวม '+fmtDur(A.min):'')+
+    (rows.length>1?' แผนกที่มีงานมากที่สุดคือ <b>'+esc(rows[0].name)+'</b> ('+rows[0].r.n+' งาน)':'')+'.';
+  const card=(v,l,c)=>'<div class="rk"><b'+(c?' style="color:var('+c+')"':'')+'>'+v+'</b><span>'+l+'</span></div>';
+  const legend=(a)=>'<div class="rl">'+a.map(x=>'<span><i style="background:var('+x[0]+')"></i>'+x[1]+'</span>').join('')+'</div>';
+  const c1=rows.map(x=>'<div class="rr"><span class="rn" title="'+esc(x.name)+'">'+esc(x.name)+'</span>'+stackBar(x.r,max)+'<span class="rv">'+x.r.n+' งาน · '+pc(x.r.done,x.r.n)+'</span></div>').join('');
+  const c2=rows.map(x=>'<div class="rr"><span class="rn" title="'+esc(x.name)+'">'+esc(x.name)+'</span><div class="rb"><i style="width:'+(x.r.min*100/maxH)+'%;background:var(--accent)"></i></div><span class="rv">'+hh(x.r.min)+'</span></div>').join('');
+  const c4=[['high','--hi'],['mid','--mid'],['low','--lo']].map(p=>'<div class="rr"><span class="rn">'+PRI_LABEL[p[0]]+'</span><div class="rb"><i style="width:'+(A[p[0]]*100/A.n)+'%;background:var('+p[1]+')"></i></div><span class="rv">'+A[p[0]]+' งาน</span></div>').join('');
+  const trow=(name,r,tot)=>'<tr'+(tot?' class="tot"':'')+'><td>'+name+'</td><td>'+r.n+'</td><td>'+r.todo+'</td><td>'+r.doing+'</td><td>'+r.blocked+'</td><td>'+r.done+'</td><td>'+pc(r.done,r.n)+'</td><td>'+r.late+'</td><td>'+hh(r.min)+'</td></tr>';
+  const tbl=(first,items)=>'<div class="rt"><table><thead><tr><th>'+first+'</th><th>งาน</th><th>ยังไม่เริ่ม</th><th>กำลังทำ</th><th>ติดปัญหา</th><th>เสร็จ</th><th>% เสร็จ</th><th>เลยกำหนด</th><th>ชั่วโมง</th></tr></thead><tbody>'+items.map(x=>trow(esc(x.name),x.r)).join('')+trow('รวม',A,1)+'</tbody></table></div>';
+  let c3='', mt='';
+  if(repPeriod==='all'){
+    const mk=[...new Set(list.filter(t=>t.date).map(t=>t.date.slice(0,7)))].sort();
+    const mr=mk.map(k=>({k:k,name:mLabel(k),r:agg(list.filter(t=>t.date&&t.date.slice(0,7)===k))}));
+    const mm=Math.max.apply(null,mr.map(x=>x.r.n))||1;
+    if(mr.length) c3='<h3>จำนวนงานรายเดือน</h3>'+legend([['--lo','ค้างอยู่'],['--d3','เสร็จแล้ว']])+'<div class="rcw">'+mr.map(x=>'<div class="rc"><b>'+x.r.n+'</b><div class="rcs" style="height:'+Math.max(4,Math.round(x.r.n*120/mm))+'px">'+(x.r.n-x.r.done?'<i style="flex:'+(x.r.n-x.r.done)+';background:var(--lo)"></i>':'')+(x.r.done?'<i style="flex:'+x.r.done+';background:var(--d3)"></i>':'')+'</div><span>'+TH_MON_SHORT[+x.k.slice(5,7)-1]+' '+String(+x.k.slice(0,4)+543).slice(2)+'</span></div>').join('')+'</div>';
+    const und=list.filter(t=>!t.date);
+    if(und.length) mr.push({name:'ไม่กำหนดวัน',r:agg(und)});
+    mt='<h3>สรุปรายเดือน</h3>'+tbl('เดือน',mr);
+  }
+  body.innerHTML='<p class="rep-sum">'+sum+'</p><div class="rks">'+card(A.n,'งานทั้งหมด')+card(A.done+' ('+pc(A.done,A.n)+')','เสร็จแล้ว','--d3')+card(A.doing,'กำลังทำ')+card(A.blocked,'ติดปัญหา',A.blocked?'--hi':'')+card(A.late,'เลยกำหนด',A.late?'--hi':'')+card(hh(A.min),'ชั่วโมงทำงานรวม')+'</div>'+
+    '<div class="rg"><section><h3>งานตามแผนกและสถานะ</h3>'+legend(ST.map(k=>[ST_COL[k],ST_LABEL[k]]))+c1+'</section><section><h3>ชั่วโมงทำงานตามแผนก</h3>'+c2+'</section></div>'+
+    '<div class="rg"><section><h3>แยกตามความสำคัญ</h3>'+c4+'</section><section>'+c3+'</section></div>'+
+    '<h3>สรุปตามแผนก</h3>'+tbl('แผนก',rows)+mt;
+}
+$('#repPeriod').addEventListener('change',e=>{ repPeriod=e.target.value; renderReport(); });
+$('#repDept').addEventListener('change',e=>{ repDept=e.target.value; renderReport(); });
+$('#repPrint').addEventListener('click',()=>window.print());
+
+/* ---------- GitHub storage (data file in a repo via Contents API) ---------- */
+const KEY_GH='todocal.v1.gh';
+let gh=lsGet(KEY_GH), ghSha=null, ghTimer=null, ghBusy=false, ghDirty=false;
+const ghUrl=()=>'https://api.github.com/repos/'+gh.repo+'/contents/'+gh.path.split('/').map(encodeURIComponent).join('/');
+const ghHead=()=>({'Authorization':'Bearer '+gh.token,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'});
+const b64e=s=>{let r='';new TextEncoder().encode(s).forEach(c=>{r+=String.fromCharCode(c);});return btoa(r);};
+const b64d=s=>new TextDecoder().decode(Uint8Array.from(atob(s.replace(/\s/g,'')),c=>c.charCodeAt(0)));
+async function ghGet(){
+  const r=await fetch(ghUrl()+'?ref='+encodeURIComponent(gh.branch)+'&t='+Date.now(),{headers:ghHead(),cache:'no-store'});
+  if(r.status===404){ ghSha=null; return null; }
+  if(!r.ok) throw new Error('gh'+r.status);
+  const j=await r.json(); ghSha=j.sha; return JSON.parse(b64d(j.content));
+}
+async function ghPut(){
+  const body={message:'update tasks',content:b64e(JSON.stringify({v:1,settings:S,tasks:tasks})),branch:gh.branch};
+  if(ghSha) body.sha=ghSha;
+  const r=await fetch(ghUrl(),{method:'PUT',headers:Object.assign({'Content-Type':'application/json'},ghHead()),body:JSON.stringify(body)});
+  if(r.status===409||r.status===422){ await ghGet(); throw new Error('conflict'); }
+  if(!r.ok) throw new Error('gh'+r.status);
+  ghSha=(await r.json()).content.sha;
+}
+function ghQueue(){ ghDirty=true; status='ghsaving'; renderStatus(); clearTimeout(ghTimer); ghTimer=setTimeout(ghFlush,800); }
+async function ghFlush(){
+  if(ghBusy){ ghTimer=setTimeout(ghFlush,500); return; }
+  ghBusy=true;
+  try{
+    for(let n=0;ghDirty&&n<3;n++){
+      ghDirty=false;
+      try{ await ghPut(); }catch(e){ ghDirty=true; if(e.message!=='conflict') throw e; }
+    }
+    if(ghDirty) throw new Error('conflict');
+    status='github';
+  }catch(e){ status='gherror'; fail(e); }
+  ghBusy=false; renderStatus();
+}
+async function goGithub(){
+  mode='github'; status='connecting'; readyRes(); renderStatus();
+  try{
+    const d=await ghGet();
+    if(d){ S=normSettings(d.settings); lsSet(KEY_SET,S); tasks=(d.tasks||[]).map(t=>norm(t.id,t)); }
+    else if(tasks.length) ghQueue();
+    lsSet(KEY_CACHE,tasks);
+    showExamples=tasks.length===0&&!lsGet(KEY_NOEX);
+    if(status==='connecting') status='github';
+  }catch(e){ status='gherror'; }
+  renderAll();
+}
+(function ghUi(){
+  const dlg=$('#gh-dlg'), form=$('#gh-form');
+  $('#gh-open').addEventListener('click',()=>{
+    const f=form.elements;
+    f.repo.value=gh?gh.repo:''; f.token.value=gh?gh.token:''; f.path.value=gh?gh.path:'todo-data.json'; f.branch.value=gh?gh.branch:'main';
+    dlg.showModal();
+  });
+  $('#gh-cancel').addEventListener('click',()=>dlg.close());
+  $('#gh-off').addEventListener('click',()=>{
+    lsSet(KEY_GH,null); gh=null; dlg.close();
+    if(mode==='github'){ mode='local'; status='local'; renderStatus(); }
+    toast('ยกเลิกการเชื่อม GitHub แล้ว');
+  });
+  form.addEventListener('submit',e=>{
+    e.preventDefault(); const f=form.elements;
+    const n={repo:f.repo.value.trim(),token:f.token.value.trim(),path:f.path.value.trim()||'todo-data.json',branch:f.branch.value.trim()||'main'};
+    if(!/^[\w.-]+\/[\w.-]+$/.test(n.repo)){ toast('ชื่อ repo ต้องเป็นรูปแบบ ชื่อผู้ใช้/ชื่อrepo'); return; }
+    gh=n; lsSet(KEY_GH,gh); dlg.close(); goGithub();
+  });
+  document.addEventListener('visibilitychange',()=>{ if(!document.hidden&&mode==='github'&&!ghBusy&&!ghDirty) goGithub(); });
+})();
+
 function dismissExamples(){
   if(!showExamples) return;
   showExamples=false; lsSet(KEY_NOEX,1);
@@ -715,24 +1358,26 @@ function renderAll(){
   if(viewMode==='cal'){ renderGrid(); renderPanel(); }
   renderSheet();
   renderSettings();
+  renderMaster();
+  renderDeptSelects();
   updateAddPreview();
   renderStatus();
 }
 
 function renderTop(){
   const y=view.y, m=view.m;
-  if(viewMode==='sheet'){ $('#monthName').textContent='ตารางงาน'; $('#yearName').textContent=''; }
+  if(viewMode!=='cal'){ $('#monthName').textContent=viewMode==='report'?'รายงาน':'ตารางงาน'; $('#yearName').textContent=''; }
   else{ $('#monthName').textContent=TH_MONTHS[m]; $('#yearName').textContent=String(y+543); }
   const prefix=y+'-'+pad(m+1);
   const all=src();
-  const inMonth=viewMode==='sheet'?all:all.filter(t=>t.date&&t.date.slice(0,7)===prefix);
+  const inMonth=viewMode!=='cal'?all:all.filter(t=>t.date&&t.date.slice(0,7)===prefix);
   const done=inMonth.filter(t=>t.done).length;
   const overdue=all.filter(isLate).length;
   const undated=all.filter(t=>!t.done&&!t.date).length;
   const pct=inMonth.length?Math.round(done*100/inMonth.length):0;
   const totalMin=inMonth.reduce((a,t)=>a+(workMinutes(t)||0),0);
   $('#summary').innerHTML=
-    '<span><b>'+inMonth.length+'</b>'+(viewMode==='sheet'?'งานทั้งหมด':'งานเดือนนี้')+'</span>'+
+    '<span><b>'+inMonth.length+'</b>'+(viewMode!=='cal'?'งานทั้งหมด':'งานเดือนนี้')+'</span>'+
     '<span><b>'+done+'</b>เสร็จแล้ว</span>'+
     (totalMin?'<span><b>'+fmtDur(totalMin)+'</b>ชั่วโมงทำงานรวม</span>':'')+
     '<span class="'+(overdue?'warn':'')+'"><b>'+overdue+'</b>เลยกำหนด</span>'+
@@ -786,6 +1431,7 @@ function taskItem(t,showDate){
     if(t.time) meta.push('<span class="time">'+t.time+'</span>');
   }
   meta.push('<span class="tag '+t.pri+'">'+PRI_LABEL[t.pri]+'</span>');
+  if(deptName(t.dept)) meta.push('<span class="tag dept">'+esc(deptName(t.dept))+'</span>');
   if(t.status==='doing'||t.status==='blocked') meta.push('<span class="tag st-'+t.status+'">'+ST_LABEL[t.status]+'</span>');
   const wm=workMinutes(t);
   if(wm!==null) meta.push('<span class="tag hrs" title="ชั่วโมงทำงานตามเวลาทำงานที่ตั้งไว้">ทำงาน '+fmtDur(wm)+'</span>');
@@ -820,7 +1466,7 @@ function editForm(t){
     '</div>'+
     '<div class="f-row two">'+
       '<div><label for="ed-status">สถานะ</label><select class="field" id="ed-status" name="status">'+stOpts(t.status)+'</select></div>'+
-      '<div><label for="ed-rest">พักระหว่างทำ (นาที)</label><input class="field" type="number" id="ed-rest" name="rest" min="0" max="9999" step="5" inputmode="numeric" placeholder="0" value="'+(t.rest||'')+'"></div>'+
+      '<div><label for="ed-dept">แผนก</label><select class="field" id="ed-dept" name="dept">'+deptOpts(deptVal(t.dept))+'</select></div>'+
     '</div>'+
     '<div class="f-row"><label for="ed-note">หมายเหตุ / วิธีแก้ไข</label><textarea class="field" id="ed-note" name="note" rows="3" maxlength="1000">'+esc(t.note)+'</textarea></div>'+
     '<div class="f-actions">'+
@@ -887,7 +1533,7 @@ function renderPanel(fresh){
   const f=$('#editForm');
   if(f&&!fresh){
     keep={};
-    ['title','date','time','end','endTime','pri','status','rest','note'].forEach(k=>{keep[k]=f.elements[k].value;});
+    ['title','date','time','end','endTime','pri','status','dept','note'].forEach(k=>{keep[k]=f.elements[k].value;});
     const ae=document.activeElement;
     focusId=(ae&&f.contains(ae))?ae.id:null;
   }
@@ -910,14 +1556,18 @@ function renderStatus(){
     cloud:['ok','เก็บในบัญชีของคุณ เห็นได้เฉพาะคุณ'],
     local:['warn','เก็บในเบราว์เซอร์เครื่องนี้เท่านั้น (ยังไม่ได้ลงชื่อเข้าใช้)'],
     slow:['warn','เชื่อมต่อที่เก็บข้อมูลไม่ได้ในตอนนี้ ข้อมูลที่เห็นอาจไม่ล่าสุด'],
-    revoked:['warn','มุมมองนี้ไม่มีสิทธิ์บันทึกงาน']
+    revoked:['warn','มุมมองนี้ไม่มีสิทธิ์บันทึกงาน'],
+    github:['ok','เก็บใน GitHub ('+(gh?gh.repo:'')+')'],
+    ghsaving:['','กำลังบันทึกไป GitHub...'],
+    gherror:['warn','เชื่อมต่อ GitHub ไม่ได้ ตรวจ Token / ชื่อ repo / branch']
   };
+  $('#gh-open').hidden=(mode==='cloud');
   const s=map[status]||map.connecting;
   el.className='status '+s[0]; el.textContent=s[1];
 }
 
 /* ---------- sheet view (Excel-style) ---------- */
-const FIELDS=['title','date','time','end','endTime','rest','pri','status','note'];
+const FIELDS=['title','date','time','end','endTime','dept','pri','status','note'];
 function parseStatus(v){ v=String(v||'').trim().toLowerCase(); const m={'ยังไม่เริ่ม':'todo','todo':'todo','กำลังทำ':'doing','doing':'doing','ติดปัญหา':'blocked','blocked':'blocked','เสร็จ':'done','เสร็จแล้ว':'done','done':'done'}; return m[v]||null; }
 const fmtCellDate=s=>s?(s.slice(8,10)+'/'+s.slice(5,7)+'/'+(parseInt(s.slice(0,4),10)+543)):'';
 function cellText(t,k){
@@ -963,7 +1613,7 @@ function sheetList(){
   const L=src().filter(pass).slice();
   if(sheetSort){
     const f=sheetSort.f, dir=sheetSort.dir;
-    const key=t=>f==='done'?(t.done?1:0):(f==='pri'?PRI.indexOf(t.pri):f==='status'?ST.indexOf(t.status):(f==='hours'?(workMinutes(t)===null?'':workMinutes(t)):(t[f]||'')));
+    const key=t=>f==='done'?(t.done?1:0):(f==='pri'?PRI.indexOf(t.pri):f==='status'?ST.indexOf(t.status):(f==='dept'?deptName(t.dept):(f==='hours'?(workMinutes(t)===null?'':workMinutes(t)):(t[f]||''))));
     L.sort((a,b)=>{
       const ka=key(a), kb=key(b);
       const ea=(ka===''), eb=(kb==='');
@@ -983,17 +1633,18 @@ function makeRow(){
   tr.innerHTML=
     '<td class="rn"></td>'+
     '<td class="ck"><input type="checkbox" data-f="done" aria-label="เสร็จแล้ว"></td>'+
-    '<td><input class="cell" data-f="title" maxlength="200" aria-label="ชื่องาน" autocomplete="off"></td>'+
+    '<td><textarea class="cell wrap" rows="1" data-f="title" maxlength="200" aria-label="ชื่องาน" autocomplete="off"></textarea></td>'+
     '<td><input class="cell mono" data-f="date" inputmode="numeric" placeholder="เลือกวันที่" aria-label="วันเริ่ม" autocomplete="off"></td>'+
     '<td><input class="cell mono" data-f="time" inputmode="numeric" placeholder="เลือกเวลา" aria-label="เวลาเริ่ม" autocomplete="off"></td>'+
     '<td><input class="cell mono" data-f="end" inputmode="numeric" placeholder="เลือกวันที่" aria-label="วันสิ้นสุด" autocomplete="off"></td>'+
     '<td><input class="cell mono" data-f="endTime" inputmode="numeric" placeholder="เลือกเวลา" aria-label="เวลาสิ้นสุด" autocomplete="off"></td>'+
-    '<td><input class="cell mono" data-f="rest" inputmode="numeric" placeholder="0" aria-label="เวลาพัก (นาที)" autocomplete="off"></td>'+
+    '<td><select class="cell" data-f="dept" aria-label="แผนก">'+deptOpts('')+'</select></td>'+
     '<td class="hrs"></td>'+
     '<td><select class="cell" data-f="pri" aria-label="ความสำคัญ"><option value="high">สูง</option><option value="mid">กลาง</option><option value="low">ต่ำ</option></select></td>'+
     '<td><select class="cell" data-f="status" aria-label="สถานะ">'+stOpts('todo')+'</select></td>'+
-    '<td><input class="cell" data-f="note" maxlength="1000" placeholder="วิธีแก้ไข / หมายเหตุ" aria-label="หมายเหตุ / วิธีแก้ไข" autocomplete="off"></td>'+
+    '<td><textarea class="cell wrap" rows="1" data-f="note" maxlength="1000" placeholder="วิธีแก้ไข / หมายเหตุ" aria-label="หมายเหตุ / วิธีแก้ไข" autocomplete="off"></textarea></td>'+
     '<td class="rx"><button type="button" class="x" data-act="sdel" tabindex="-1" aria-label="ลบแถว">×</button></td>';
+  tr.querySelector('[data-f="dept"]').dataset.sig=deptSig();
   return tr;
 }
 function makeNewRow(){
@@ -1018,23 +1669,34 @@ function updateRow(tr,t,n){
   const g=k=>tr.querySelector('[data-f="'+k+'"]');
   g('done').checked=t.done;
   setIdle(g('title'),t.title); setIdle(g('date'),fmtCellDate(t.date)); setIdle(g('time'),t.time); setIdle(g('end'),fmtCellDate(t.end)); setIdle(g('endTime'),t.endTime); setIdle(g('note'),t.note);
-  setIdle(g('pri'),t.pri); setIdle(g('rest'),t.rest?String(t.rest):''); setIdle(g('status'),t.status||(t.done?'done':'todo'));
+  setIdle(g('pri'),t.pri); syncDept(g('dept'),t.dept); setIdle(g('dept'),deptVal(t.dept)); setIdle(g('status'),t.status||(t.done?'done':'todo'));
   g('date').classList.toggle('late',isLate(t));
   g('end').classList.toggle('late',isLate(t));
   const wm=workMinutes(t), hc=tr.querySelector('.hrs');
   hc.textContent=wm===null?'':fmtDur(wm);
   hc.title=wm===null?'':'= '+(Math.round(wm/dayMin()*100)/100)+' วันทำงาน (วันละ '+fmtDur(dayMin())+')';
-  ['title','date','time','end','endTime','rest','note'].forEach(k=>{ g(k).readOnly=!!t.example; });
-  g('pri').disabled=!!t.example; g('status').disabled=!!t.example;
+  ['title','date','time','end','endTime','note'].forEach(k=>{ g(k).readOnly=!!t.example; });
+  g('pri').disabled=!!t.example; g('status').disabled=!!t.example; g('dept').disabled=!!t.example;
 }
 
+let stickUntil=0;
+function fitOne(el){ el.style.height='auto'; el.style.height=Math.max(37,el.scrollHeight)+'px'; }
+function fitAll(){
+  const a=Array.from(document.querySelectorAll('#sheetBody textarea.wrap'));
+  a.forEach(el=>{ el.style.height='auto'; });
+  const h=a.map(el=>el.scrollHeight);
+  a.forEach((el,i)=>{ el.style.height=Math.max(37,h[i])+'px'; });
+}
 function renderSheet(){
   const on=viewMode==='sheet';
   $('#sheet').hidden=!on;
-  $('#main').hidden=on;
-  $('#nav').hidden=on;
+  $('#main').hidden=viewMode!=='cal';
+  $('#nav').hidden=viewMode!=='cal';
+  $('#report').hidden=viewMode!=='report';
+  if(viewMode==='report') renderReport();
   if(!on) return;
   $('#sheetDemo').hidden=!showExamples;
+  const sc=document.querySelector('.sheet-scroll'), st0=sc.scrollTop, wy=window.scrollY;
   const body=$('#sheetBody');
   const ae=document.activeElement;
   let fr=null;
@@ -1043,6 +1705,7 @@ function renderSheet(){
   }
   let nr=body.querySelector('tr.newrow');
   if(!nr){ nr=makeNewRow(); body.appendChild(nr); }
+  syncDept(nr.querySelector('[data-f="dept"]'));
   const list=sheetList();
   const totMin=list.reduce((a,t)=>a+(workMinutes(t)||0),0);
   $('#sheetTotal').textContent=totMin?fmtDur(totMin):'—';
@@ -1063,6 +1726,10 @@ function renderSheet(){
     const el=row&&row.querySelector('[data-f="'+fr.f+'"]');
     if(el&&document.activeElement!==el) el.focus({preventScroll:true});
   }
+  fitAll();
+  sc.scrollTop=st0;
+  if(Math.abs(window.scrollY-wy)>1) window.scrollTo(0,wy);
+  if(fr&&fr.isNew&&Date.now()<stickUntil) nr.scrollIntoView({block:'nearest'});
   document.querySelectorAll('.hbtn[data-f]').forEach(b=>{
     const on2=sheetSort&&sheetSort.f===b.dataset.f;
     b.querySelector('.arr').textContent=on2?(sheetSort.dir===1?'▲':'▼'):'';
@@ -1074,7 +1741,7 @@ function focusCell(tr,f){
   const el=tr&&tr.querySelector('[data-f="'+f+'"]');
   if(!el||el.disabled) return;
   el.focus();
-  if(el.tagName==='INPUT'&&el.type!=='checkbox'&&el.select) el.select();
+  if(el.tagName!=='SELECT'&&el.type!=='checkbox'&&el.select) el.select();
 }
 
 function commitCell(el){
@@ -1090,10 +1757,7 @@ function commitCell(el){
   let bad='';
   if(k==='done'){ nt.done=el.checked; nt.status=nt.done?'done':(t.status==='done'?'todo':t.status); }
   else if(k==='status'){ nt.status=el.value; nt.done=nt.status==='done'; }
-  else if(k==='rest'){
-    const v=el.value.trim();
-    if(v===''||/^\d{1,4}$/.test(v)) nt.rest=+v||0; else bad='ใส่เวลาพักเป็นตัวเลขนาที เช่น 15';
-  }
+  else if(k==='dept') nt.dept=el.value;
   else if(k==='title'){
     const v=el.value.trim();
     if(!v){ toast('ชื่องานว่างไม่ได้'); el.value=t.title; return; }
@@ -1110,7 +1774,6 @@ function commitCell(el){
   if(bad){ toast(bad); el.value=cellText(t,k); return; }
   if(k==='date'||k==='end') el.value=fmtCellDate(nt[k]);
   if(k==='time'||k==='endTime') el.value=nt[k];
-  if(k==='rest') el.value=nt.rest||'';
   if(FIELDS.concat(['done']).every(f=>nt[f]===t[f])) return;
   save(nt).catch(fail);
 }
@@ -1124,16 +1787,15 @@ function commitNew(refocus){
   const ed=parseCellDate(g('end').value), et=parseCellTime(g('endTime').value);
   const chk=[[d,'date','วันเริ่ม','5/11/2569 หรือ 5/11'],[tm,'time','เวลาเริ่ม','09:30'],[ed,'end','วันสิ้นสุด','5/11/2569 หรือ 5/11'],[et,'endTime','เวลาสิ้นสุด','17:00']].find(x=>x[0]===null);
   if(chk){ toast(chk[2]+'ไม่ถูกต้อง ลองพิมพ์ '+chk[3]); g(chk[1]).focus(); return; }
-  const rv=g('rest').value.trim();
-  if(rv!==''&&!/^\d{1,4}$/.test(rv)){ toast('ใส่เวลาพักเป็นตัวเลขนาที เช่น 15'); g('rest').focus(); return; }
   const st=g('status').value;
-  const t={id:newId(),title:title.slice(0,200),date:d,time:tm,end:ed,endTime:et,pri:g('pri').value,note:g('note').value.trim().slice(0,1000),done:st==='done',status:st,rest:+rv||0,created:Date.now()};
+  const t={id:newId(),title:title.slice(0,200),date:d,time:tm,end:ed,endTime:et,pri:g('pri').value,note:g('note').value.trim().slice(0,1000),done:st==='done',status:st,dept:g('dept').value,created:Date.now()};
   const re=rangeError(t);
   if(re){ toast(re); g(ed?'end':(et?'endTime':'date')).focus(); return; }
   dismissExamples();
-  g('title').value=''; g('time').value=''; g('end').value=''; g('endTime').value=''; g('note').value=''; g('rest').value=''; g('status').value='todo';
+  g('title').value=''; g('time').value=''; g('end').value=''; g('endTime').value=''; g('note').value=''; g('status').value='todo';
   g('date').value=fmtCellDate(d);
   updateNewHrs();
+  if(refocus) stickUntil=Date.now()+600;
   renderAll();
   save(t).catch(fail);
   if(refocus) focusCell(tr,'title');
@@ -1147,13 +1809,15 @@ sheetEl.addEventListener('change',e=>{
 function updateNewHrs(){
   const tr=$('#sheetBody tr.newrow'); if(!tr) return;
   const v=k=>tr.querySelector('[data-f="'+k+'"]').value;
-  const t={date:parseCellDate(v('date')),time:parseCellTime(v('time')),end:parseCellDate(v('end')),endTime:parseCellTime(v('endTime')),rest:v('rest')};
+  const t={date:parseCellDate(v('date')),time:parseCellTime(v('time')),end:parseCellDate(v('end')),endTime:parseCellTime(v('endTime'))};
   const c=tr.querySelector('.hrs');
   if(t.date===null||t.time===null||t.end===null||t.endTime===null){ c.textContent=''; return; }
   const m=workMinutes(t);
   c.textContent=m===null?'':fmtDur(m);
 }
 sheetEl.addEventListener('input',e=>{ if(e.target.closest&&e.target.closest('tr.newrow')) updateNewHrs(); });
+sheetEl.addEventListener('input',e=>{ if(e.target.tagName==='TEXTAREA') fitOne(e.target); });
+window.addEventListener('resize',()=>{ if(viewMode==='sheet') fitAll(); });
 sheetEl.addEventListener('focusout',e=>{
   const nr=e.target.closest&&e.target.closest('tr.newrow');
   if(!nr) return;
@@ -1175,7 +1839,7 @@ sheetEl.addEventListener('keydown',e=>{
     if(!isNew){ const t=find(tr.dataset.id); if(t&&el.type!=='checkbox') el.value=cellText(t,f); }
     el.blur(); return;
   }
-  if(f==='done'||f==='pri'||f==='status'||e.altKey||e.ctrlKey||e.metaKey) return;
+  if(f==='done'||f==='pri'||f==='status'||f==='dept'||e.altKey||e.ctrlKey||e.metaKey) return;
   if(e.key==='Enter'&&isNew){ e.preventDefault(); commitNew(true); return; }
   const dir=e.key==='Enter'?(e.shiftKey?-1:1):(e.key==='ArrowDown'?1:(e.key==='ArrowUp'?-1:0));
   if(!dir) return;
@@ -1204,7 +1868,7 @@ sheetEl.addEventListener('paste',e=>{
   const ops=[];
   rows.slice(0,200).forEach((line,i)=>{
     const base=list[r0+i];
-    const t=base?Object.assign({},base):{id:newId(),title:'',date:'',time:'',end:'',endTime:'',pri:'mid',note:'',done:false,status:'todo',rest:0,created:Date.now()+i};
+    const t=base?Object.assign({},base):{id:newId(),title:'',date:'',time:'',end:'',endTime:'',pri:'mid',note:'',done:false,status:'todo',dept:'',created:Date.now()+i};
     line.split('\t').forEach((c,j)=>{
       const k=FIELDS[c0+j]; if(!k) return;
       c=c.trim();
@@ -1212,7 +1876,7 @@ sheetEl.addEventListener('paste',e=>{
       else if(k==='date'||k==='end'){ const v=parseCellDate(c); if(v===null) bad++; else t[k]=v; }
       else if(k==='time'||k==='endTime'){ const v=parseCellTime(c); if(v===null) bad++; else t[k]=v; }
       else if(k==='pri'){ if(c){ const v=parsePri(c); if(v===null) bad++; else t.pri=v; } }
-      else if(k==='rest'){ if(c==='') t.rest=0; else if(/^\d{1,4}$/.test(c)) t.rest=+c; else bad++; }
+      else if(k==='dept'){ if(c==='') t.dept=''; else{ const id=deptIdByName(c); if(id===null) bad++; else t.dept=id; } }
       else if(k==='status'){ if(c){ const v=parseStatus(c); if(v===null) bad++; else t.status=v; } }
       else if(k==='note') t.note=c.slice(0,1000);
     });
@@ -1335,11 +1999,39 @@ document.addEventListener('click',e=>{
     }
     case 'today': selectDate(todayStr(),{}); break;
     case 'filter': filter=el.dataset.v; renderAll(); break;
-    case 'view': viewMode=el.dataset.v==='cal'?'cal':'sheet'; lsSet(KEY_VIEW,viewMode); editing=null; renderAll(); break;
+    case 'view': viewMode=({cal:1,report:1})[el.dataset.v]?el.dataset.v:'sheet'; lsSet(KEY_VIEW,viewMode); editing=null; renderAll(); break;
     case 'ws': {
       const p=$('#wsPanel'); p.hidden=!p.hidden;
       el.setAttribute('aria-expanded',String(!p.hidden));
       if(!p.hidden) renderSettings(true);
+      break;
+    }
+    case 'xl': {
+      const p=$('#xlPanel'); p.hidden=!p.hidden;
+      el.setAttribute('aria-expanded',String(!p.hidden));
+      break;
+    }
+    case 'xl-export': xlExport(); break;
+    case 'xl-tpl': xlTemplate(); break;
+    case 'xl-pick': $('#xlFile').click(); break;
+    case 'xl-do': xlCommit(); break;
+    case 'xl-cancel': xlPending=null; renderXlPrev(); break;
+    case 'master': {
+      const p=$('#mdPanel'); p.hidden=!p.hidden;
+      el.setAttribute('aria-expanded',String(!p.hidden));
+      if(!p.hidden) renderMaster(true);
+      break;
+    }
+    case 'mdel': {
+      const did=el.dataset.did;
+      if(!el.classList.contains('arm')){
+        const n=deptCounts()[did]||0;
+        el.classList.add('arm','solid'); el.textContent=n?'ลบ? (ใช้ '+n+' งาน)':'ลบ?';
+        setTimeout(()=>{ if(el.isConnected){ el.classList.remove('arm','solid'); el.textContent='ลบ'; } },3000);
+      }else{
+        S=Object.assign({},S,{depts:S.depts.filter(d=>d.id!==did)});
+        saveSettings(); toast('ลบแผนกแล้ว');
+      }
       break;
     }
     case 'wsday': {
@@ -1408,7 +2100,7 @@ $('#addForm').addEventListener('submit',e=>{
   e.preventDefault();
   const title=$('#add-title').value.trim();
   if(!title){ $('#add-title').focus(); return; }
-  const t={id:newId(),title:title,date:$('#add-date').value,time:$('#add-time').value,end:$('#add-end').value,endTime:$('#add-endtime').value,pri:$('#add-pri').value,note:'',done:false,status:'todo',rest:0,created:Date.now()};
+  const t={id:newId(),title:title,date:$('#add-date').value,time:$('#add-time').value,end:$('#add-end').value,endTime:$('#add-endtime').value,pri:$('#add-pri').value,note:'',done:false,status:'todo',dept:$('#add-dept').value,created:Date.now()};
   const re=rangeError(t);
   if(re){ toast(re); return; }
   dismissExamples();
@@ -1431,7 +2123,7 @@ $('#panel').addEventListener('submit',e=>{
   const li=f.closest('[data-id]'); const t=li&&find(li.dataset.id); if(!t) return;
   const title=f.elements.title.value.trim();
   if(!title){ toast('ใส่ชื่องานก่อนบันทึก'); f.elements.title.focus(); return; }
-  const nt=Object.assign({},t,{title:title,date:f.elements.date.value,time:f.elements.time.value,end:f.elements.end.value,endTime:f.elements.endTime.value,pri:f.elements.pri.value,status:f.elements.status.value,done:f.elements.status.value==='done',rest:Math.min(9999,parseInt(f.elements.rest.value,10)||0),note:f.elements.note.value.trim()});
+  const nt=Object.assign({},t,{title:title,date:f.elements.date.value,time:f.elements.time.value,end:f.elements.end.value,endTime:f.elements.endTime.value,pri:f.elements.pri.value,status:f.elements.status.value,done:f.elements.status.value==='done',dept:f.elements.dept.value,note:f.elements.note.value.trim()});
   const re=rangeError(nt);
   if(re){ toast(re); return; }
   editing=null;
@@ -1465,7 +2157,7 @@ async function connect(){
       if(db&&usr) uid=await usr.id();
     }
   }catch(e){}
-  if(!db||!uid){ goLocal(); return; }
+  if(!db||!uid){ if(gh&&gh.token&&gh.repo) goGithub(); else goLocal(); return; }
   coll=db.collection('data/users/'+uid);
   mode='cloud'; status='connecting';
   readyRes(); renderStatus();
